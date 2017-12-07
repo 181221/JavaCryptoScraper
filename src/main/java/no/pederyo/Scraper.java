@@ -3,7 +3,6 @@ package no.pederyo;
 import no.pederyo.coin.Coin;
 import no.pederyo.coin.CoinUtil;
 import no.pederyo.jsoup.JsoupScrape;
-import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 
@@ -11,20 +10,29 @@ import static no.pederyo.coin.CoinUtil.formaterTall;
 
 
 public class Scraper {
-    public static void main(String[] args) throws IOException {
-        Element elem = JsoupScrape.connect();
+    public static void main(String[] args) throws IOException, InterruptedException {
         Coin coin = new Coin(98, 4000.1234);
-        start(elem, coin);
-
+        while (true) {
+            double verdi = scrape();
+            start(verdi, coin);
+            System.out.println();
+            Thread.sleep(10000);
+        }
     }
 
-    private static void start(Element elem, Coin coin) {
-        double verdi = CoinUtil.konverterTilTall(elem);
+    private static double scrape() {
+        return CoinUtil.konverterTilTall(JsoupScrape.connect());
+    }
+
+    private static void start(double verdi, Coin coin) {
         if (verdi != -1) {
+            coin.leggTil(verdi);
             coin.setTotal(CoinUtil.totalVerdiINOK(verdi, coin));
             double avkasning = (coin.getTotal() - coin.getInvestment()) / coin.getInvestment() * 100;
             coin.setAvkasning(avkasning);
             skrivUt(verdi, coin);
+        } else {
+            System.out.println("noe gikk galt");
         }
     }
 
