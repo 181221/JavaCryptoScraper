@@ -6,16 +6,15 @@ import no.pederyo.util.CoinUtil;
 
 import static no.pederyo.util.CoinUtil.formaterTall;
 
-class ScrapeHjelper {
+public class ScrapeHjelper {
     /**
      * Setter opp argumene fra main.
-     *
      * @param args antall coin -> args[0]. investering -> args[1]
      * @return Coin
      */
-    static Coin lagCoinFraArgs(String[] args) {
+    public static Coin lagCoinFraArgs(String[] args) {
         Coin c = new Coin();
-        if (args.length == 3) {
+        if (args.length == 2) {
             c.setAntall(Integer.parseInt(args[0]));
             c.setInvestment(Double.parseDouble(args[1]));
         }
@@ -27,7 +26,7 @@ class ScrapeHjelper {
      *
      * @return verdien
      */
-    static double scrape() {
+    public static double scrape() {
         return CoinUtil.konverterTilTall(JsoupScrape.connect());
     }
 
@@ -36,11 +35,15 @@ class ScrapeHjelper {
      * @param verdi
      * @param coin
      */
-    static void skrivUt(double verdi, Coin coin) {
+    public static void skrivUt(double verdi, Coin coin) {
         System.out.println("Verdien til IoTa: " + verdi + " USD");
         System.out.println("Din investering: " + formaterTall(coin.getInvestment()) + " kr");
         System.out.println("Din totale beholdning: " + formaterTall(coin.getTotal()) + " kr ");
         System.out.println("Avkasning: " + formaterTall(coin.getAvkasning()) + "%");
-        System.out.println("Forje verdi: " + coin.seForjePris());
+        int antall = coin.getVerdier().size();
+        if (antall >= 2) {
+            System.out.println("Forje verdi: " + coin.seForjePris() + " kl " + coin.getVerdier().get(antall - 1).getTid());
+        }
     }
+
 }

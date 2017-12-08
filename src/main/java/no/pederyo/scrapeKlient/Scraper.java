@@ -16,17 +16,39 @@ import static no.pederyo.util.CoinUtil.*;
  * Program for å tracke prisen til IoTa.
  */
 public class Scraper {
+    public static final double MILEPEL = 4.5;
+    public static final double MILEPELFEM = 5.5;
+    public static final double MILEPELSEKS = 6.5;
+    public static boolean naaddfire;
+    public static boolean naaddfem;
+    public static boolean naaddseks;
+
+    public Scraper() {
+        naaddfire = false;
+        naaddfem = false;
+        naaddseks = false;
+        PushBullet pb = new PushBullet("asdasdasasd");
+    }
     public static void main(String[] args) throws IOException, InterruptedException {
         Coin coin = lagCoinFraArgs(args);
+        new PushBullet(args[2]);
         CustomTask.setOppPlanlegger(9, 00, coin);
         int i = 0;
+        double verdi = scrape();
+        double oldValue = verdi;
         while (true) {
             try {
                 i++;
-                double verdi = scrape();
+                verdi = scrape();
                 regnUtVerdier(verdi, coin);
+                leggTilVerdi(verdi, coin);
+                sjekkValletPushNot(coin, verdi);
                 skrivUt(verdi, coin);
-                leggTilogSjekkOekning(verdi, coin, i);
+                if (i % 3 == 0) { //lagrer gammel verdi vært 30 sek
+                    oldValue = verdi;
+                }
+                sjekkforjeVerdi(oldValue, verdi);
+                sjekkMilePeler(verdi);
                 System.out.println();
                 Thread.sleep(10000);
             } catch (Exception e) {
@@ -35,20 +57,38 @@ public class Scraper {
         }
     }
 
-    /**
-     * legger til en verdi hver halvtime
-     *
-     * @param verdi
-     * @param coin
-     * @param i
-     */
-    public static void leggTilogSjekkOekning(double verdi, Coin coin, int i) {
-        if (i % 180 == 0) {
-            leggTilVerdi(verdi, coin);
-            if (coin.getOekning() > 3.0) {
-                // send melding.
-            }
+    public static boolean sjekkMilePeler(double current) {
+        String melding = "milepel nådd verdien er nå ";
+        int i = 0;
+        if (current >= MILEPEL && current < MILEPEL + 0.5 && !naaddfire) { //mellom 4.5 og 5
+            PushBullet.client.sendNotePush(melding, formaterTall(current));
+            System.out.println(melding + formaterTall(current));
+            naaddfire = true;
+            i++;
         }
+        if (current >= (MILEPELFEM) && current < (MILEPELFEM + 0.5) && !naaddfem) { //mellom 5.5 og 5
+            PushBullet.client.sendNotePush(melding, formaterTall(current));
+            System.out.println(melding + formaterTall(current));
+            naaddfem = true;
+            i++;
+        }
+        if (current >= (MILEPELSEKS) && current < (MILEPELSEKS + 0.5) && !naaddseks) { //mellom 6 og 5.5
+            PushBullet.client.sendNotePush(melding, formaterTall(current));
+            System.out.println(melding + formaterTall(current));
+            naaddseks = true;
+            i++;
+        }
+        return i >= 1;
+    }
+
+    public static boolean sjekkforjeVerdi(double forje, double current) {
+        boolean nypris = false;
+        if (current >= forje + .02) {
+            System.out.println("ny verdi");
+            PushBullet.client.sendNotePush("ny verdi", formaterTall(current));
+            nypris = true;
+        }
+        return nypris;
     }
 
     /**
@@ -56,19 +96,20 @@ public class Scraper {
      * @param coin
      * @return true om det er over 0 prosent økning.
      */
-    private static boolean oekning(Coin coin) {
+    public static boolean oekning(Coin coin) {
         boolean oekning = false;
         ArrayList<Verdi> coins = coin.getVerdier();
         int antall = coins.size();
-        double currentVerdi = coins.get(antall - 1).getPris();
-        double forjeVerdi = coins.get(antall - 2).getPris();
-        double differanse = CoinUtil.formaterDouble(rengUtProsent(currentVerdi, forjeVerdi));
-        if (differanse > 0) {
-            coin.setOekning(differanse);
-            oekning = true;
+        if (antall >= 2) {
+            double currentVerdi = coins.get(antall - 1).getPris();
+            double forjeVerdi = coins.get(antall - 2).getPris();
+            double differanse = CoinUtil.formaterDouble(rengUtProsent(currentVerdi, forjeVerdi));
+            if (differanse >= 3) {
+                coin.setOekning(differanse);
+                PushBullet.client.sendNotePush("ØkningVarsel", formaterTall(coin.getOekning()));
+                oekning = true;
+            }
         }
         return oekning;
     }
-
-
 }

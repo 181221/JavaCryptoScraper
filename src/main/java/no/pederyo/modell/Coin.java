@@ -2,6 +2,14 @@ package no.pederyo.modell;
 
 import java.util.ArrayList;
 
+/**
+ * @antall antall Iota Coins.
+ * @investment din investering.
+ * @avkastning din total-invest/invest.
+ * @total Ditt belop i NOK basert på Iota verdi.
+ * @oekning økningen på iota.
+ * @verdier liste med Verdi, pris og datoen.
+ */
 public class Coin {
     private int antall;
     private double investment;

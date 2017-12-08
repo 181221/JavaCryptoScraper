@@ -2,6 +2,7 @@ package no.pederyo.util;
 
 import no.pederyo.modell.Coin;
 import no.pederyo.modell.Verdi;
+import no.pederyo.scrapeKlient.PushBullet;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
@@ -83,20 +84,40 @@ public class CoinUtil {
      * @param verdi
      * @param coin
      */
-    public static void regnUtVerdier(double verdi, Coin coin) {
+    public static boolean regnUtVerdier(double verdi, Coin coin) {
+        boolean nyVerdi = false;
         if (verdi != -1) {
             coin.setTotal(CoinUtil.totalVerdiINOK(verdi, coin));
             double avkasning = rengUtProsent(coin.getTotal(), coin.getInvestment());
             coin.setAvkasning(avkasning);
+            nyVerdi = true;
         } else {
             System.out.println("noe gikk galt");
         }
+        return nyVerdi;
     }
 
-    public static void leggTilVerdi(double verdi, Coin coin) {
+    public static boolean sjekkValletPushNot(Coin c, double verdi) {
+        int antall = c.getVerdier().size();
+        boolean nyVerdi = false;
+        if (c.getAvkasning() > 2) {
+            PushBullet.client.sendNotePush("Avkastning", formaterTall(c.getAvkasning()));
+            nyVerdi = true;
+        }
+        if (verdi > (c.seForjePris()) + 0.3 && c.getVerdier().size() >= 2) {
+            PushBullet.client.sendNotePush("Ny pris på Iota", formaterTall(verdi));
+            nyVerdi = true;
+        }
+        return nyVerdi;
+    }
+
+    public static boolean leggTilVerdi(double verdi, Coin coin) {
+        boolean lagtTil = false;
         if (verdi != -1) {
             coin.leggTil(lagVerdi(verdi));
+            lagtTil = true;
         }
+        return lagtTil;
     }
 
     private static Verdi lagVerdi(double pris) {

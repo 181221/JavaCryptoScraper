@@ -1,11 +1,13 @@
 package no.pederyo.timertask;
 
 import no.pederyo.modell.Coin;
-import no.pederyo.modell.Verdi;
+import no.pederyo.scrapeKlient.PushBullet;
 
 import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static no.pederyo.util.CoinUtil.formaterTall;
 
 public class CustomTask extends TimerTask {
     private static Coin coin;
@@ -48,15 +50,20 @@ public class CustomTask extends TimerTask {
 
     public void run() {
         try {
-            Verdi verdi = coin.dagensHoeste();
-            coin.getInvestment();
-            coin.getTotal();
-            coin.getAvkasning();
+            String melding = lagMelding();
+            PushBullet.client.sendNotePush("Summary!", melding);
             coin = null;
-            //SEND MAIL eller pushbullet
         } catch (Exception ex) {
-
             System.out.println("error running thread " + ex.getMessage());
         }
+    }
+
+    public String lagMelding() {
+        String melding = "Dagens Høyeste: " + formaterTall(coin.dagensHoeste().getPris()) + "$ kl: " + coin.dagensHoeste().getTid() +
+                "\nDin investering: " + formaterTall(coin.getInvestment()) + "kr" +
+                "\nTotal beholdning: " + formaterTall(coin.getTotal()) + "kr" +
+                "\nAvkasning: " + formaterTall(coin.getAvkasning()) + "%" +
+                "\nAntall Iota's: " + coin.getAntall();
+        return melding;
     }
 }
