@@ -122,11 +122,10 @@ public class CoinUtil {
             PushBullet.client.sendNotePush("Avkastning", formaterTall(c.getAvkasning()) +"%");
             nyVerdi = true;
         }
-        if (verdi > plussforje && antall >= 2) {
+        if (verdi >= plussforje && antall >= 2) {
             PushBullet.client.sendNotePush("Stigning på Iota", formaterTall(verdi) + " økning på over 0.3");
             nyVerdi = true;
-        }
-        if (verdi < minusforje && antall >= 2) {
+        } else if (verdi <= minusforje && antall >= 2) {
             PushBullet.client.sendNotePush("Iota droppet siden", formaterTall(verdi) + " nedgang på over 0.3");
             nyVerdi = true;
         }

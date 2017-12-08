@@ -15,27 +15,35 @@ public class CoinUtilTest {
     Verdi v1 = new Verdi(5.0, "10:40");
     Verdi v3 = new Verdi(6.0, "10:40");
     Verdi v4 = new Verdi(4.0, "10:40");
-    Verdi v5 = new Verdi(5.0, "10:40");
-    Verdi v6 = new Verdi(6.0, "10:40");
-    Verdi v7 = new Verdi(5.0, "10:40");
-    Verdi v8 = new Verdi(5.2, "10:40");
     private Coin c;
 
     @Before
     public void setUp() {
         VerdiSjekker v = new VerdiSjekker();
         c = new Coin();
+        c.setAvkasning(0);
+    }
+    @Test
+    public void sjekkAtValletPushNotNaarDiffMinusRiktig() {
+        c.leggTil(v1);
+        c.leggTil(v3);
+        assertTrue(sjekkValletPushNot(c, 4.70000000));
+        assertTrue(sjekkValletPushNot(c, 4.324323));
+        assertFalse(sjekkValletPushNot(c, 5));
+        assertTrue(sjekkValletPushNot(c, 3.211212));
+        assertFalse(sjekkValletPushNot(c, 5));
     }
 
     @Test
-    public void sjekkAtValletPushNotNaarDiffErRiktig() {
+    public void sjekkAtValletPushNotNaarDiffPLussErRiktig() {
         c.leggTil(v0);
         c.leggTil(v1);
         assertTrue(sjekkValletPushNot(c, 4.3));
         assertTrue(sjekkValletPushNot(c, 4.5));
         c.leggTil(v3);
-        assertTrue(sjekkValletPushNot(c, 4.3));
-        assertTrue(sjekkValletPushNot(c, 4.5));
+        assertTrue(sjekkValletPushNot(c, 5.3));
+        assertTrue(sjekkValletPushNot(c, 5.555));
+        assertFalse(sjekkValletPushNot(c, 4.81));
     }
 
     @Test
