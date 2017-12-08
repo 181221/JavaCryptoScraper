@@ -7,6 +7,15 @@
     <groupId>javaScraper</groupId>
     <artifactId>Scraper</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <developers>
+        <developer>
+            <id>181221</id>
+            <name>Peder Wiig</name>
+            <email>peder.wiig@gmail.com</email>
+            <organization>Pederyo</organization>
+            <organizationUrl>https://pederyo.no</organizationUrl>
+        </developer>
+    </developers>
     <properties>
         <encoding>UTF-8</encoding>
         <java.version>1.8</java.version>

@@ -46,7 +46,6 @@ public class Scraper {
         if (iterasjon % 4320 == 0) { // hver 12 time send summary.
             PushBullet.client.sendNotePush("Summary!", ScrapeHjelper.lagMelding(coin));
         }
-        System.out.println();
     }
 
 }
