@@ -1,7 +1,7 @@
 package no.pederyo.timertask;
 
 import no.pederyo.modell.Coin;
-import no.pederyo.scrapeKlient.PushBullet;
+import no.pederyo.scraper.PushBullet;
 
 import java.util.Calendar;
 import java.util.Timer;

@@ -2,7 +2,7 @@ package no.pederyo.util;
 
 import no.pederyo.modell.Coin;
 import no.pederyo.modell.Verdi;
-import no.pederyo.scrapeKlient.PushBullet;
+import no.pederyo.scraper.PushBullet;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;

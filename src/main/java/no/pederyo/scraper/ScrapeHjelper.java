@@ -1,4 +1,4 @@
-package no.pederyo.scrapeKlient;
+package no.pederyo.scraper;
 
 import no.api.jsoup.JsoupScrape;
 import no.pederyo.modell.Coin;
@@ -14,7 +14,7 @@ public class ScrapeHjelper {
      */
     public static Coin lagCoinFraArgs(String[] args) {
         Coin c = new Coin();
-        if (args.length == 2) {
+        if (args.length - 1 == 2) {
             c.setAntall(Integer.parseInt(args[0]));
             c.setInvestment(Double.parseDouble(args[1]));
         }

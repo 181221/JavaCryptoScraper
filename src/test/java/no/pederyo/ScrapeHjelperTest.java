@@ -1,7 +1,7 @@
 package no.pederyo;
 
 import no.pederyo.modell.Coin;
-import no.pederyo.scrapeKlient.ScrapeHjelper;
+import no.pederyo.scraper.ScrapeHjelper;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ public class ScrapeHjelperTest {
 
     @Before
     public void setup() {
-        args = new String[2];
+        args = new String[3];
         args[0] = antall;
         args[1] = invest;
     }

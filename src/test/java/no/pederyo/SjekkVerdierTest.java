@@ -1,7 +1,7 @@
 package no.pederyo;
 
 import no.pederyo.modell.Coin;
-import no.pederyo.scrapeKlient.Scraper;
+import no.pederyo.scraper.VerdiSjekker;
 import no.pederyo.util.CoinUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,12 +16,12 @@ public class SjekkVerdierTest {
     private double e3 = 4.7;
     private double e4 = 4.9;
     private double e5 = 4.8;
-    private Scraper scraper;
+    private VerdiSjekker verdiSjekker;
     private Coin c;
 
     @Before
     public void setup() {
-        scraper = new Scraper();
+        verdiSjekker = new VerdiSjekker();
         c = new Coin();
         CoinUtil.leggTilVerdi(4.0, c);
         CoinUtil.leggTilVerdi(8.0, c);
@@ -32,64 +32,64 @@ public class SjekkVerdierTest {
 
     @Test
     public void sjekkAtNyVerdiErSann() {
-        assertTrue(Scraper.sjekkforjeVerdi(e0, e1));
-        assertTrue(Scraper.sjekkforjeVerdi(e0, e2));
-        assertTrue(Scraper.sjekkforjeVerdi(e0, e3));
-        assertFalse(Scraper.sjekkforjeVerdi(e1, e0));
-        assertFalse(Scraper.sjekkforjeVerdi(e4, e5));
-        assertFalse(Scraper.sjekkforjeVerdi(e3, e2));
+        assertTrue(VerdiSjekker.sjekkforjeVerdi(e0, e1));
+        assertTrue(VerdiSjekker.sjekkforjeVerdi(e0, e2));
+        assertTrue(VerdiSjekker.sjekkforjeVerdi(e0, e3));
+        assertFalse(VerdiSjekker.sjekkforjeVerdi(e1, e0));
+        assertFalse(VerdiSjekker.sjekkforjeVerdi(e4, e5));
+        assertFalse(VerdiSjekker.sjekkforjeVerdi(e3, e2));
     }
 
     @Test
     public void sjekkAtMilePelFIREBlirNaad() {
-        assertFalse(Scraper.naaddfire);
-        assertTrue(Scraper.sjekkMilePeler(4.5));
-        assertFalse(Scraper.sjekkMilePeler(4.5));
-        assertFalse(Scraper.sjekkMilePeler(4.3));
-        assertFalse(Scraper.sjekkMilePeler(4.2));
-        assertTrue(Scraper.naaddfire);
+        assertFalse(VerdiSjekker.naaddfire);
+        assertTrue(VerdiSjekker.sjekkMilePeler(4.5));
+        assertFalse(VerdiSjekker.sjekkMilePeler(4.5));
+        assertFalse(VerdiSjekker.sjekkMilePeler(4.3));
+        assertFalse(VerdiSjekker.sjekkMilePeler(4.2));
+        assertTrue(VerdiSjekker.naaddfire);
     }
 
     @Test
     public void sjekkAtMilePelFEMBlirNaad() {
-        assertFalse(Scraper.naaddfem);
-        assertTrue(Scraper.sjekkMilePeler(5.5));
-        assertFalse(Scraper.sjekkMilePeler(5.5));
-        assertFalse(Scraper.sjekkMilePeler(5.3));
-        assertFalse(Scraper.sjekkMilePeler(5.2));
-        assertTrue(Scraper.naaddfem);
+        assertFalse(VerdiSjekker.naaddfem);
+        assertTrue(VerdiSjekker.sjekkMilePeler(5.5));
+        assertFalse(VerdiSjekker.sjekkMilePeler(5.5));
+        assertFalse(VerdiSjekker.sjekkMilePeler(5.3));
+        assertFalse(VerdiSjekker.sjekkMilePeler(5.2));
+        assertTrue(VerdiSjekker.naaddfem);
     }
 
     @Test
     public void sjekkAtMilePelSEKSBlirNaad() {
-        assertFalse(Scraper.naaddseks);
-        assertTrue(Scraper.sjekkMilePeler(6.5));
-        assertFalse(Scraper.sjekkMilePeler(6.5));
-        assertFalse(Scraper.sjekkMilePeler(6.3));
-        assertFalse(Scraper.sjekkMilePeler(6.2));
-        assertTrue(Scraper.naaddseks);
+        assertFalse(VerdiSjekker.naaddseks);
+        assertTrue(VerdiSjekker.sjekkMilePeler(6.5));
+        assertFalse(VerdiSjekker.sjekkMilePeler(6.5));
+        assertFalse(VerdiSjekker.sjekkMilePeler(6.3));
+        assertFalse(VerdiSjekker.sjekkMilePeler(6.2));
+        assertTrue(VerdiSjekker.naaddseks);
     }
 
     @Test
     public void sjekkerOekning() {
         CoinUtil.leggTilVerdi(15.0, c);
         CoinUtil.leggTilVerdi(19.0, c);
-        assertTrue(Scraper.oekning(c));
+        assertTrue(VerdiSjekker.oekning(c));
         CoinUtil.leggTilVerdi(15.0, c);
         CoinUtil.leggTilVerdi(16.0, c);
         CoinUtil.leggTilVerdi(124.0, c);
         CoinUtil.leggTilVerdi(125.0, c);
-        assertFalse(Scraper.oekning(c));
+        assertFalse(VerdiSjekker.oekning(c));
         CoinUtil.leggTilVerdi(100.0, c);
         CoinUtil.leggTilVerdi(103.0, c);
-        assertTrue(Scraper.oekning(c));
+        assertTrue(VerdiSjekker.oekning(c));
     }
 
     @Test
     public void antallErTom() {
         Coin k = new Coin();
         assertTrue(k.getVerdier().size() == 0);
-        assertFalse(Scraper.oekning(k));
+        assertFalse(VerdiSjekker.oekning(k));
     }
 
     @Test
