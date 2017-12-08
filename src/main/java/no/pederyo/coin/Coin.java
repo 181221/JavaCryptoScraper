@@ -7,6 +7,7 @@ public class Coin {
     private double investment;
     private double avkasning;
     private double total;
+    private double oekning;
     private ArrayList<Double> priser;
 
     public Coin() {
@@ -25,11 +26,19 @@ public class Coin {
     }
 
     public double seForjePris() {
-        if (!priser.isEmpty()) {
-            return priser.get(priser.size() - 1);
+        if (priser.size() >= 2) {
+            return priser.get(priser.size() - 2);
         } else {
             return -1.0;
         }
+    }
+
+    public double getOekning() {
+        return oekning;
+    }
+
+    public void setOekning(double oekning) {
+        this.oekning = oekning;
     }
 
     int getAntall() {

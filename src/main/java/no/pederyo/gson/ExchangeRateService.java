@@ -23,6 +23,14 @@ class ExchangeRateService {
     //	"amount":0.9,
     //	"message":""}
 
+    /**
+     * Henter currency fra internett.
+     *
+     * @param source
+     * @param target
+     * @return
+     * @throws IOException
+     */
     static ExchangeRate getRate(String source, String target) throws IOException {
 
         String baseUrl = "https://currency-api.appspot.com/api/";

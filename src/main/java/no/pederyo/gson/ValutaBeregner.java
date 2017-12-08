@@ -5,7 +5,16 @@ import java.util.Currency;
 import java.util.Set;
 
 public class ValutaBeregner {
-
+    /**
+     * Sjekker at valutaen stemmer.
+     * Henter raten fra internett og regner ut belopet.
+     *
+     * @param fra   USD
+     * @param til   NOK
+     * @param belop iota*USD
+     * @return belop.
+     * @throws IOException
+     */
     public static double BeregnValuta(String fra, String til, double belop) throws IOException {
         ExchangeRate rate;
         if (sjekkOmValutaStemmer(fra, til)) {
@@ -16,6 +25,12 @@ public class ValutaBeregner {
         return rate.getRate() * belop;
     }
 
+    /**
+     * Sjekker om Valutaen kodene stemmer.
+     * @param fra
+     * @param til
+     * @return true om valutaen fins, false ellers.
+     */
     private static boolean sjekkOmValutaStemmer(String fra, String til) {
         Set<Currency> currencies = Currency.getAvailableCurrencies();
         int i = 0;
