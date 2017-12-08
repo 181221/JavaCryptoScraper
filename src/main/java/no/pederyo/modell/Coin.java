@@ -9,32 +9,46 @@ public class Coin {
     private double total;
     private double oekning;
     private ArrayList<Verdi> verdier;
-    private ArrayList<Double> priser;
 
     public Coin() {
         this(0, 0.0);
-        priser = new ArrayList<>();
         verdier = new ArrayList<>();
     }
 
     public Coin(int antall, double investment) {
         this.antall = antall;
         this.investment = investment;
-        priser = new ArrayList<>();
         verdier = new ArrayList<>();
     }
 
-    public void leggTil(Double pris) {
-        priser.add(pris);
+    public void leggTil(Verdi verdi) {
+        verdier.add(verdi);
     }
 
     public double seForjePris() {
-        if (priser.size() >= 2) {
-            return priser.get(priser.size() - 2);
+        if (verdier.size() >= 2) {
+            return verdier.get(verdier.size() - 2).getPris();
         } else {
             return -1.0;
         }
     }
+
+    public Verdi dagensHoeste() {
+        double max = 0;
+        Verdi verdi = null;
+        if (verdier.size() > 0) {
+            for (Verdi v : verdier) {
+                if (v.getPris() > max) {
+                    max = v.getPris();
+                    verdi = v;
+                }
+            }
+        }
+        return verdi;
+    }
+
+
+    // ------------- GETTERS OG SETTERS ---------------------
 
     public ArrayList<Verdi> getVerdier() {
         return verdier;
@@ -82,13 +96,5 @@ public class Coin {
 
     public void setTotal(double total) {
         this.total = total;
-    }
-
-    public ArrayList<Double> getPriser() {
-        return priser;
-    }
-
-    public void setPriser(ArrayList<Double> priser) {
-        this.priser = priser;
     }
 }

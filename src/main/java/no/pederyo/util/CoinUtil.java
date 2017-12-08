@@ -1,6 +1,7 @@
 package no.pederyo.util;
 
 import no.pederyo.modell.Coin;
+import no.pederyo.modell.Verdi;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
@@ -84,7 +85,6 @@ public class CoinUtil {
      */
     public static void regnUtVerdier(double verdi, Coin coin) {
         if (verdi != -1) {
-            coin.leggTil(verdi);
             coin.setTotal(CoinUtil.totalVerdiINOK(verdi, coin));
             double avkasning = rengUtProsent(coin.getTotal(), coin.getInvestment());
             coin.setAvkasning(avkasning);
@@ -93,7 +93,13 @@ public class CoinUtil {
         }
     }
 
-    public static void regnUtTid(double verdi, Coin c) {
-        DatoUtil.lagCurrentDate();
+    public static void leggTilVerdi(double verdi, Coin coin) {
+        if (verdi != -1) {
+            coin.leggTil(lagVerdi(verdi));
+        }
+    }
+
+    private static Verdi lagVerdi(double pris) {
+        return new Verdi(pris, DatoUtil.lagCurrentDate());
     }
 }

@@ -13,6 +13,7 @@ public class Verdi {
         this.tid = tid;
     }
 
+
     public double getPris() {
         return pris;
     }
