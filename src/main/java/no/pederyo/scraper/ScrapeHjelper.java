@@ -46,4 +46,13 @@ public class ScrapeHjelper {
         }
     }
 
+    public static String lagMelding(Coin coin) {
+        String melding = "Dagens Høyeste: " + formaterTall(coin.dagensHoeste().getPris()) + "$ kl: " + coin.dagensHoeste().getTid() +
+                "\nDin investering: " + formaterTall(coin.getInvestment()) + "kr" +
+                "\nTotal beholdning: " + formaterTall(coin.getTotal()) + "kr" +
+                "\nAvkasning: " + formaterTall(coin.getAvkasning()) + "%" +
+                "\nAntall Iota's: " + coin.getAntall();
+        return melding;
+    }
+
 }
