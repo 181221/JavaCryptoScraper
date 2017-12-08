@@ -1,14 +1,14 @@
-package no.pederyo.scrape;
+package no.pederyo.scrapeKlient;
 
-import no.pederyo.coin.Coin;
-import no.pederyo.coin.CoinUtil;
+import no.pederyo.modell.Coin;
+import no.pederyo.util.CoinUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static no.pederyo.coin.CoinUtil.regnUtVerdier;
-import static no.pederyo.coin.CoinUtil.rengUtProsent;
-import static no.pederyo.scrape.ScrapeHjelper.*;
+import static no.pederyo.scrapeKlient.ScrapeHjelper.*;
+import static no.pederyo.util.CoinUtil.regnUtVerdier;
+import static no.pederyo.util.CoinUtil.rengUtProsent;
 
 /**
  * @author Peder
@@ -20,17 +20,15 @@ public class Scraper {
         int i = 0;
         while (true) {
             try {
+                i++;
                 double verdi = scrape();
                 regnUtVerdier(verdi, coin);
                 skrivUt(verdi, coin);
-                i++;
-                if (i % 2 == 0) {
-                    if (oekning(coin)) {
-                        System.out.println("Det har skjedd en økning siden forjegang: " + coin.getOekning() + "%");
-                    }
+                if (i % 6 == 0 && oekning(coin)) {
+                    System.out.println("Det har skjedd en økning siden forjegang: " + coin.getOekning() + "%");
                 }
                 System.out.println();
-                Thread.sleep(1000);
+                Thread.sleep(10000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -39,7 +37,6 @@ public class Scraper {
 
     /**
      * Regner ut økning av IoTa. Regner ut om det er en forksjell på midten og siste i pristabellen.
-     *
      * @param coin
      * @return true om det er en 0.5 prosent økning.
      */

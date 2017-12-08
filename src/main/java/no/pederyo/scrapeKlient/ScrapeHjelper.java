@@ -1,10 +1,10 @@
-package no.pederyo.scrape;
+package no.pederyo.scrapeKlient;
 
-import no.pederyo.coin.Coin;
-import no.pederyo.coin.CoinUtil;
-import no.pederyo.jsoup.JsoupScrape;
+import no.api.jsoup.JsoupScrape;
+import no.pederyo.modell.Coin;
+import no.pederyo.util.CoinUtil;
 
-import static no.pederyo.coin.CoinUtil.formaterTall;
+import static no.pederyo.util.CoinUtil.formaterTall;
 
 class ScrapeHjelper {
     /**

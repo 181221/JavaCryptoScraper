@@ -1,4 +1,4 @@
-package no.pederyo.coin;
+package no.pederyo.modell;
 
 import java.util.ArrayList;
 
@@ -8,20 +8,23 @@ public class Coin {
     private double avkasning;
     private double total;
     private double oekning;
+    private ArrayList<Verdi> verdier;
     private ArrayList<Double> priser;
 
     public Coin() {
         this(0, 0.0);
         priser = new ArrayList<>();
+        verdier = new ArrayList<>();
     }
 
-    private Coin(int antall, double investment) {
+    public Coin(int antall, double investment) {
         this.antall = antall;
         this.investment = investment;
         priser = new ArrayList<>();
+        verdier = new ArrayList<>();
     }
 
-    void leggTil(Double pris) {
+    public void leggTil(Double pris) {
         priser.add(pris);
     }
 
@@ -33,6 +36,14 @@ public class Coin {
         }
     }
 
+    public ArrayList<Verdi> getVerdier() {
+        return verdier;
+    }
+
+    public void setVerdier(ArrayList<Verdi> verdier) {
+        this.verdier = verdier;
+    }
+
     public double getOekning() {
         return oekning;
     }
@@ -41,7 +52,7 @@ public class Coin {
         this.oekning = oekning;
     }
 
-    int getAntall() {
+    public int getAntall() {
         return antall;
     }
 
@@ -61,7 +72,7 @@ public class Coin {
         return avkasning;
     }
 
-    void setAvkasning(double avkasning) {
+    public void setAvkasning(double avkasning) {
         this.avkasning = avkasning;
     }
 
@@ -69,7 +80,7 @@ public class Coin {
         return total;
     }
 
-    void setTotal(double total) {
+    public void setTotal(double total) {
         this.total = total;
     }
 

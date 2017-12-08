@@ -1,6 +1,6 @@
-package no.pederyo.coin;
+package no.pederyo.util;
 
-import no.pederyo.gson.ValutaBeregner;
+import no.pederyo.modell.Coin;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
@@ -91,5 +91,9 @@ public class CoinUtil {
         } else {
             System.out.println("noe gikk galt");
         }
+    }
+
+    public static void regnUtTid(double verdi, Coin c) {
+        DatoUtil.lagCurrentDate();
     }
 }

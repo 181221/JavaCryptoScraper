@@ -1,4 +1,4 @@
-package no.pederyo.gson;
+package no.api.gson;
 
 /**
  * {"success":true,
@@ -41,7 +41,7 @@ public class ExchangeRate {
         this.target = target;
     }
 
-    double getRate() {
+    public double getRate() {
         return rate;
     }
 

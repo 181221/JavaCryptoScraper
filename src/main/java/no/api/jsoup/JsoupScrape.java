@@ -1,4 +1,4 @@
-package no.pederyo.jsoup;
+package no.api.jsoup;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

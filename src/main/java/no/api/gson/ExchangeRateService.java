@@ -1,4 +1,4 @@
-package no.pederyo.gson;
+package no.api.gson;
 
 import com.google.gson.Gson;
 
@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 
-class ExchangeRateService {
+public class ExchangeRateService {
 
     // Home and documentation:
     // https://currency-api.appspot.com/
@@ -31,7 +31,7 @@ class ExchangeRateService {
      * @return
      * @throws IOException
      */
-    static ExchangeRate getRate(String source, String target) throws IOException {
+    public static ExchangeRate getRate(String source, String target) throws IOException {
 
         String baseUrl = "https://currency-api.appspot.com/api/";
         String format = "json";

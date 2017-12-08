@@ -1,4 +1,7 @@
-package no.pederyo.gson;
+package no.pederyo.util;
+
+import no.api.gson.ExchangeRate;
+import no.api.gson.ExchangeRateService;
 
 import java.io.IOException;
 import java.util.Currency;
