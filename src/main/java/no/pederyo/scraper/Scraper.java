@@ -11,14 +11,12 @@ import static no.pederyo.util.CoinUtil.*;
 
 public class Scraper {
     private static double oldValue = 0.0;
-
+    private static int iterasjon = 0;
     public static void kjorProgram(Coin c) {
-        int i = 0;
-        double verdi = scrape();
-        oldValue = verdi;
+        oldValue = scrape();
         while (true) {
             try {
-                enScrapeIterasjon(i, verdi, c);
+                enScrapeIterasjon(c);
                 Thread.sleep(10000);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -31,14 +29,16 @@ public class Scraper {
         PlanleggerHjelp.settOppplanlegger(coin);
     }
 
-    private static void enScrapeIterasjon(int i, double verdi, Coin coin) {
-        i++;
-        verdi = scrape();
+    private static void enScrapeIterasjon(Coin coin) {
+        iterasjon++;
+        double verdi = scrape();
         regnUtVerdier(verdi, coin);
         leggTilVerdi(verdi, coin);
-        sjekkValletPushNot(coin, verdi);
+        if (iterasjon % 90 == 0) {
+            sjekkValletPushNot(coin, verdi);
+        }
         skrivUt(verdi, coin);
-        if (i % 3 == 0) { //lagrer gammel verdi vært 30 sek
+        if (iterasjon % 3 == 0) { //lagrer gammel verdi vært 30 sek
             oldValue = verdi;
         }
         sjekkforjeVerdi(oldValue, verdi);

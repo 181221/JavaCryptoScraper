@@ -4,10 +4,10 @@ import no.pederyo.modell.Coin;
 import no.pederyo.modell.Verdi;
 import no.pederyo.util.CoinUtil;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
-import static no.pederyo.util.CoinUtil.formaterTall;
-import static no.pederyo.util.CoinUtil.rengUtProsent;
+import static no.pederyo.util.CoinUtil.*;
 
 public class VerdiSjekker {
     public static final double MILEPEL = 4.5;
@@ -49,11 +49,29 @@ public class VerdiSjekker {
         return i >= 1;
     }
 
+    public static double gjorOmDoubleTilBC(double forje, String operator, double differanse) {
+        BigDecimal b = new BigDecimal(forje);
+        BigDecimal b1 = new BigDecimal(0.2);
+        BigDecimal b2;
+        if (operator.equals("pluss")) {
+            b2 = b.add(b1);
+        } else if (operator.equals("minus")) {
+            b2 = b.subtract(b1);
+        } else {
+            return -1;
+        }
+        return formaterDouble(b2.doubleValue(), "##.0000");
+    }
+
     public static boolean sjekkforjeVerdi(double forje, double current) {
         boolean nypris = false;
-        if (current >= forje + .03) {
-            System.out.println("Ny Verdi");
-            PushBullet.client.sendNotePush("Ny Verdi", formaterTall(current) + " USD");
+        double plussforje = gjorOmDoubleTilBC(forje, "pluss", 0.2);
+        double minusforje = gjorOmDoubleTilBC(forje, "minus", 0.2);
+        if (current >= plussforje && plussforje != -1) {
+            PushBullet.client.sendNotePush("Ny +Verdi", formaterTall(current) + " USD");
+            nypris = true;
+        } else if (current <= minusforje && minusforje != -1) {
+            PushBullet.client.sendNotePush("Ny -Verdi", formaterTall(current) + " USD");
             nypris = true;
         }
         return nypris;

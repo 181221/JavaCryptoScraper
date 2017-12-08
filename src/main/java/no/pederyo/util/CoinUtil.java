@@ -8,6 +8,8 @@ import org.jsoup.nodes.Element;
 import java.io.IOException;
 import java.text.DecimalFormat;
 
+import static no.pederyo.scraper.VerdiSjekker.gjorOmDoubleTilBC;
+
 public class CoinUtil {
     /**
      * Ganger ut antall IoTa med verdien til den med i USD og
@@ -46,6 +48,12 @@ public class CoinUtil {
      */
     public static double formaterDouble(double verdi) {
         DecimalFormat f = new DecimalFormat("##.00");
+        String verdien = f.format(verdi).toString().replace(',', '.');
+        return Double.parseDouble(verdien);
+    }
+
+    public static double formaterDouble(double verdi, String pattern) {
+        DecimalFormat f = new DecimalFormat(pattern);
         String verdien = f.format(verdi).toString().replace(',', '.');
         return Double.parseDouble(verdien);
     }
@@ -97,15 +105,29 @@ public class CoinUtil {
         return nyVerdi;
     }
 
+    /**
+     * Kjøres vært 15 min sjekker om avkastningen er høyere enn 2%
+     * sjekker verditabellen om det er prisendring
+     *
+     * @param c
+     * @param verdi realtime iota verdi i dollar
+     * @return returnerer true om det har vært en endring på +-0.3 eller om avkasning høyere om 2%
+     */
     public static boolean sjekkValletPushNot(Coin c, double verdi) {
         int antall = c.getVerdier().size();
+        double plussforje = gjorOmDoubleTilBC(c.seForjePris(), "pluss", 0.3);
+        double minusforje = gjorOmDoubleTilBC(c.seForjePris(), "minus", 0.3);
         boolean nyVerdi = false;
-        if (c.getAvkasning() > 2) {
-            PushBullet.client.sendNotePush("Avkastning", formaterTall(c.getAvkasning()));
+        if (c.getAvkasning() >= 2) {
+            PushBullet.client.sendNotePush("Avkastning", formaterTall(c.getAvkasning()) +"%");
             nyVerdi = true;
         }
-        if (verdi > (c.seForjePris()) + 0.3 && c.getVerdier().size() >= 2) {
-            PushBullet.client.sendNotePush("Ny pris på Iota", formaterTall(verdi));
+        if (verdi > plussforje && antall >= 2) {
+            PushBullet.client.sendNotePush("Stigning på Iota", formaterTall(verdi) + " økning på over 0.3");
+            nyVerdi = true;
+        }
+        if (verdi < minusforje && antall >= 2) {
+            PushBullet.client.sendNotePush("Iota droppet siden", formaterTall(verdi) + " nedgang på over 0.3");
             nyVerdi = true;
         }
         return nyVerdi;

@@ -31,13 +31,46 @@ public class SjekkVerdierTest {
     }
 
     @Test
-    public void sjekkAtNyVerdiErSann() {
-        assertTrue(VerdiSjekker.sjekkforjeVerdi(e0, e1));
-        assertTrue(VerdiSjekker.sjekkforjeVerdi(e0, e2));
-        assertTrue(VerdiSjekker.sjekkforjeVerdi(e0, e3));
-        assertFalse(VerdiSjekker.sjekkforjeVerdi(e1, e0));
-        assertFalse(VerdiSjekker.sjekkforjeVerdi(e4, e5));
-        assertFalse(VerdiSjekker.sjekkforjeVerdi(e3, e2));
+    public void sjekkAtNyVerdiErSannpluss() {
+        assertTrue(VerdiSjekker.sjekkforjeVerdi(4.3123, 4.5123));
+        assertTrue(VerdiSjekker.sjekkforjeVerdi(4.5432, 5));
+        assertTrue(VerdiSjekker.sjekkforjeVerdi(2.2, 2.4));
+        assertTrue(VerdiSjekker.sjekkforjeVerdi(2.312, 2.512));
+        assertTrue(VerdiSjekker.sjekkforjeVerdi(0.0, 2.512));
+        assertFalse(VerdiSjekker.sjekkforjeVerdi(2.0, 2.1));
+        assertFalse(VerdiSjekker.sjekkforjeVerdi(2.1, 2.1));
+        assertFalse(VerdiSjekker.sjekkforjeVerdi(2, 2));
+    }
+
+    @Test
+    public void sjekkAtNyVerdiErSannminus() {
+        assertTrue(VerdiSjekker.sjekkforjeVerdi(4.2, 4));
+        assertTrue(VerdiSjekker.sjekkforjeVerdi(4.300, 4.1));
+        assertTrue(VerdiSjekker.sjekkforjeVerdi(5.221, 4));
+        assertTrue(VerdiSjekker.sjekkforjeVerdi(10.3412, 10.1412));
+        assertFalse(VerdiSjekker.sjekkforjeVerdi(2.0, 2.1));
+        assertFalse(VerdiSjekker.sjekkforjeVerdi(0, 0));
+    }
+
+    @Test
+    public void gjoromdobletilbigdecimal() {
+        double f1 = 2.0000;
+        double f2 = 2.3000;
+        double f3 = 2.5000;
+        double f4 = 3.6000;
+        double diff = 0.2;
+        assertTrue(VerdiSjekker.gjorOmDoubleTilBC(f1, "pluss", diff) == 2.2000);
+        assertTrue(VerdiSjekker.gjorOmDoubleTilBC(f2, "pluss", diff) == 2.5000);
+        assertTrue(VerdiSjekker.gjorOmDoubleTilBC(f3, "pluss", diff) == 2.7000);
+        assertTrue(VerdiSjekker.gjorOmDoubleTilBC(f4, "pluss", diff) == 3.8000);
+
+        assertTrue(VerdiSjekker.gjorOmDoubleTilBC(f4, "feil", diff) == -1);
+
+        assertTrue(VerdiSjekker.gjorOmDoubleTilBC(f1, "minus", diff) == 1.8000);
+        assertTrue(VerdiSjekker.gjorOmDoubleTilBC(f2, "minus", diff) == 2.1000);
+        assertTrue(VerdiSjekker.gjorOmDoubleTilBC(f3, "minus", diff) == f2);
+        assertTrue(VerdiSjekker.gjorOmDoubleTilBC(f4, "minus", diff) == 3.4);
+
     }
 
     @Test
