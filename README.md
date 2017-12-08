@@ -3,7 +3,9 @@
 Program som tracker prisen på Iota og gir bruker notifikasjon om endringer.
 
 Kjør jar med tre parametere: Antall Iota's, Investeringen din, PushBullet Api.
-
+### Før du begynner
+ * For at applikasjonen skal funkere må du ha pushbullet. Du finner apien din på hjemmesiden deres.
+ * Sjekk at du har javaversjon > 8 innstalert.
 ### Last ned jar fil
 * <a href="https://github.com/181221/h181221.github.io/raw/master/JavaScrapeIota/JavaScrapeIota.jar">JavaScrapeIota </a>
 * Legg den i ønsket mappe
