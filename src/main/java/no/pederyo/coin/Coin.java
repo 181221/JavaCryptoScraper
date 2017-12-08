@@ -9,13 +9,18 @@ public class Coin {
     private double total;
     private ArrayList<Double> priser;
 
-    public Coin(int antall, double investment) {
+    public Coin() {
+        this(0, 0.0);
+        priser = new ArrayList<>();
+    }
+
+    private Coin(int antall, double investment) {
         this.antall = antall;
         this.investment = investment;
         priser = new ArrayList<>();
     }
 
-    public void leggTil(Double pris) {
+    void leggTil(Double pris) {
         priser.add(pris);
     }
 
@@ -47,7 +52,7 @@ public class Coin {
         return avkasning;
     }
 
-    public void setAvkasning(double avkasning) {
+    void setAvkasning(double avkasning) {
         this.avkasning = avkasning;
     }
 
@@ -55,7 +60,7 @@ public class Coin {
         return total;
     }
 
-    public void setTotal(double total) {
+    void setTotal(double total) {
         this.total = total;
     }
 
