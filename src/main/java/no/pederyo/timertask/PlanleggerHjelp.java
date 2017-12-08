@@ -20,8 +20,6 @@ public class PlanleggerHjelp {
     public static void settOppplanlegger(Coin c) {
         int time = formaterTime("h");
         int min = formaterTime("mm");
-        System.out.println(time);
-        System.out.println(min);
         CustomTask.setOppPlanlegger(time, min, c);
     }
 }

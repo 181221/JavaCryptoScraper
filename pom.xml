@@ -26,7 +26,23 @@
         <logback.version>1.1.8</logback.version>
         <gson.version>2.2.4</gson.version>
     </properties>
-
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>no.pederyo.klient.Klient</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>org.jsoup</groupId>
@@ -84,5 +100,6 @@
             <version>4.12</version>
         </dependency>
     </dependencies>
+
 
 </project>
