@@ -144,14 +144,18 @@ public class CoinUtil {
      * @param avk
      * @return
      */
-    public static boolean sjekkAvkastning(Coin c, Avkastning avk) {
+    public static boolean sjekkAvkastning(Avkastning avk) {
         boolean nyAvkasning = false;
         if (avk.getAntall() >= 2) {
             double forje = avk.getStart().getNeste().getElement();
             double current = avk.getStart().getElement();
-            forje = gjorOmDoubleTilBC(forje, "pluss", 5);
-            if (current >= forje) {
-                PushBullet.client.sendNotePush("Avkastning", formaterTall(c.getAvkasning()) + "%");
+            double plussforje = gjorOmDoubleTilBC(forje, "pluss", 5);
+            double minusforje = gjorOmDoubleTilBC(forje, "minus", 5);
+            if (current >= plussforje) {
+                //PushBullet.client.sendNotePush("pluss-Avkastning", formaterTall(current + "%");
+                nyAvkasning = true;
+            } else if (current <= minusforje) {
+                //PushBullet.client.sendNotePush("minus-Avkastning", formaterTall(current + "%");
                 nyAvkasning = true;
             }
         }

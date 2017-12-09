@@ -42,7 +42,7 @@ public class Scraper {
         if (iterasjon % 180 == 0) { //sjekker mot gammel verdi. Hver halv time.
             sjekkValletPushNot(coin, verdi); //sjekker gammel mot current verdi.
             avk.leggTilAvkastning(coin); // legger til nyAvkastning
-            sjekkAvkastning(coin, avk); // sjekker avkastning.
+            sjekkAvkastning(avk); // sjekker avkastning.
             leggTilVerdi(verdi, coin);
         }
         sjekkforjeVerdi(oldValue, verdi);
