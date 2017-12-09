@@ -40,7 +40,7 @@ public class ScrapeHjelper {
         int antall = coin.getVerdier().size();
         String melding = " ";
         if (antall >= 2) {
-            melding = "\nForje verdi: " + coin.seForjePris() + " kl " + coin.getVerdier().get(antall - 1).getTid();
+            melding = "\nForje verdi: " + coin.seForjePris() + " kl " + coin.getVerdier().get(antall - 2).getTid();
             System.out.println();
         }
         Logg.logger.info("Verdien til IoTa: " + verdi + " USD" +
@@ -55,7 +55,9 @@ public class ScrapeHjelper {
                 "\nDin investering: " + formaterTall(coin.getInvestment()) + "kr" +
                 "\nTotal beholdning: " + formaterTall(coin.getTotal()) + "kr" +
                 "\nAvkasning: " + formaterTall(coin.getAvkasning()) + "%" +
-                "\nAntall Iota's: " + coin.getAntall();
+                "\nAntall Iota's: " + coin.getAntall() +
+                "\nIoTa verdi: " + formaterTall(coin.seForjePris());
+
         Logg.logger.info(melding);
         return melding;
     }

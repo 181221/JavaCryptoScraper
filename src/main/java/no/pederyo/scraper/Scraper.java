@@ -3,7 +3,6 @@ package no.pederyo.scraper;
 import no.pederyo.logg.Logg;
 import no.pederyo.modell.Avkastning;
 import no.pederyo.modell.Coin;
-import no.pederyo.timertask.PlanleggerHjelp;
 
 import static no.pederyo.scraper.ScrapeHjelper.scrape;
 import static no.pederyo.scraper.ScrapeHjelper.skrivTilLogg;
@@ -14,8 +13,10 @@ import static no.pederyo.util.CoinUtil.*;
 public class Scraper {
     private static double oldValue = 0.0;
     private static int iterasjon = 0;
+    private static final String MELDING_START = "IoTa-Tracking har nå startet. Current Verdi: ";
     public static void kjorProgram(Coin c) {
         oldValue = scrape();
+        PushBullet.client.sendNotePush("TRACKING STARTET", MELDING_START + oldValue + " USD");
         leggTilVerdi(oldValue, c);
         Avkastning avkastning = new Avkastning();
         regnUtSetTotalOgAvkastning(oldValue, c);
@@ -48,7 +49,7 @@ public class Scraper {
         sjekkforjeVerdi(oldValue, verdi);
         sjekkMilePeler(verdi);
         if (iterasjon % 4320 == 0) { // hver 12 time send summary.
-            PushBullet.client.sendNotePush("Summary!", ScrapeHjelper.lagMelding(coin));
+            PushBullet.client.sendNotePush("12 Timers varsel.", ScrapeHjelper.lagMelding(coin));
         }
     }
 
@@ -61,7 +62,7 @@ public class Scraper {
     public static void setUp(String[] args, Coin coin) {
         new PushBullet(args[2]);
         new Logg();
-        PlanleggerHjelp.settOppplanlegger(coin);// Har ikke testet metode.
+        //PlanleggerHjelp.settOppplanlegger(coin);// Har ikke testet metode.
     }
 
 }

@@ -27,20 +27,21 @@ public class VerdiSjekker {
     }
 
     public static boolean sjekkMilePeler(double current) {
-        String melding = "milepel nådd verdien er nå ";
+        String melding = "Milepel nådd!";
+        String body = "Verdi nå: ";
         int i = 0;
         if (current >= MILEPEL && current < MILEPEL + 0.5 && !naaddfire) { //mellom 4.5 og 5
-            PushBullet.client.sendNotePush(melding, formaterTall(current) + " USD");
+            PushBullet.client.sendNotePush(melding, body + formaterTall(current) + " USD");
             naaddfire = true;
             i++;
         }
         if (current >= (MILEPELFEM) && current < (MILEPELFEM + 0.5) && !naaddfem) { //mellom 5.5 og 5
-            PushBullet.client.sendNotePush(melding, formaterTall(current) + " USD");
+            PushBullet.client.sendNotePush(melding, body + formaterTall(current) + " USD");
             naaddfem = true;
             i++;
         }
         if (current >= (MILEPELSEKS) && current < (MILEPELSEKS + 0.5) && !naaddseks) { //mellom 6 og 5.5
-            PushBullet.client.sendNotePush(melding, formaterTall(current) + " USD");
+            PushBullet.client.sendNotePush(melding, body + formaterTall(current) + " USD");
             naaddseks = true;
             i++;
         }

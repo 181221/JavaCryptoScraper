@@ -128,10 +128,10 @@ public class CoinUtil {
         double minusforje = gjorOmDoubleTilBC(c.seForjePris(), "minus", 0.3);
         boolean nyVerdi = false;
         if (verdi >= plussforje && antall >= 2) {
-            PushBullet.client.sendNotePush("Stigning på Iota", formaterTall(verdi) + " økning på over 0.3");
+            PushBullet.client.sendNotePush("Stigning! IoTaVerdi er nå " + formaterTall(verdi) + " USD", "Økning på over 0.3 siden " + c.getVerdier().get(antall - 2).getTid());
             nyVerdi = true;
         } else if (verdi <= minusforje && antall >= 2) {
-            PushBullet.client.sendNotePush("Iota droppet siden", formaterTall(verdi) + " nedgang på over 0.3");
+            PushBullet.client.sendNotePush("Nedgang! IoTaVerdi er nå " + formaterTall(verdi) + " USD", "Nedgang på over 0.3 siden " + c.getVerdier().get(antall - 2).getTid());
             nyVerdi = true;
         }
         return nyVerdi;
@@ -151,12 +151,12 @@ public class CoinUtil {
             double minusforje = gjorOmDoubleTilBC(forje, "minus", 5);
             double diff;
             if (current >= plussforje) {
-                diff = gjorOmDoubleTilBC(current, "pluss", forje);
-                PushBullet.client.sendNotePush("pluss-Avkastning", "verdien er nå: " + formaterTall(current) + " fortjenelsen har steget " + diff + "% på 30 min.");
+                diff = gjorOmDoubleTilBC(forje, "minus", current);
+                PushBullet.client.sendNotePush("Avkastning varsel", " Avkastning er nå: " + formaterTall(current) + "%. Avkastning har steget med " + formaterTall(Math.abs(diff)) + "%, på 30 min.");
                 nyAvkasning = true;
             } else if (current <= minusforje) {
-                diff = gjorOmDoubleTilBC(current, "minus", forje);
-                PushBullet.client.sendNotePush("minus-Avkastning", "verdien er nå: " + formaterTall(current) + " fortjenelsen har synket " + diff + "% på 30 min.");
+                diff = gjorOmDoubleTilBC(forje, "minus", current);
+                PushBullet.client.sendNotePush("Avkastning varsel", "Avkastning er nå: " + formaterTall(current) + "%. Fortjenelsen har synket med " + formaterTall(diff) + "%, på 30 min.");
                 nyAvkasning = true;
             }
         }
