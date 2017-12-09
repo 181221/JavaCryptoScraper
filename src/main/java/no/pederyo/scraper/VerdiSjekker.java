@@ -1,5 +1,6 @@
 package no.pederyo.scraper;
 
+import no.pederyo.logg.Logg;
 import no.pederyo.modell.Coin;
 import no.pederyo.modell.Verdi;
 import no.pederyo.util.CoinUtil;
@@ -66,9 +67,11 @@ public class VerdiSjekker {
         double minusforje = gjorOmDoubleTilBC(forje, "minus", 0.2);
         if (current >= plussforje && plussforje != -1) {
             PushBullet.client.sendNotePush("Ny +Verdi", formaterTall(current) + " USD");
+            Logg.logger.info("Ny +Verdi " + formaterTall(current) + " USD");
             nypris = true;
         } else if (current <= minusforje && minusforje != -1) {
             PushBullet.client.sendNotePush("Ny -Verdi", formaterTall(current) + " USD");
+            Logg.logger.info("Ny -Verdi " + formaterTall(current) + " USD");
             nypris = true;
         }
         return nypris;
@@ -91,6 +94,7 @@ public class VerdiSjekker {
             if (differanse >= 3) {
                 coin.setOekning(differanse);
                 PushBullet.client.sendNotePush("ØkningVarsel", formaterTall(coin.getOekning()) + "%");
+                Logg.logger.info("ØkningVarsel" + formaterTall(coin.getOekning()) + "%");
                 oekning = true;
             }
         }

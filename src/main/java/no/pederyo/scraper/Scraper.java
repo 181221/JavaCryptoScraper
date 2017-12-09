@@ -1,9 +1,11 @@
 package no.pederyo.scraper;
 
+import no.pederyo.logg.Logg;
 import no.pederyo.modell.Coin;
 import no.pederyo.timertask.PlanleggerHjelp;
 
 import static no.pederyo.scraper.ScrapeHjelper.scrape;
+import static no.pederyo.scraper.ScrapeHjelper.skrivTilLogg;
 import static no.pederyo.scraper.VerdiSjekker.sjekkMilePeler;
 import static no.pederyo.scraper.VerdiSjekker.sjekkforjeVerdi;
 import static no.pederyo.util.CoinUtil.*;
@@ -24,8 +26,15 @@ public class Scraper {
         }
     }
 
+    /**
+     * Setter opp pb, logg og planlegger.
+     *
+     * @param args
+     * @param coin
+     */
     public static void setUp(String[] args, Coin coin) {
         new PushBullet(args[2]);
+        new Logg();
         PlanleggerHjelp.settOppplanlegger(coin);// Har ikke testet metode.
     }
 
@@ -33,7 +42,7 @@ public class Scraper {
         iterasjon++;
         double verdi = scrape();
         regnUtVerdier(verdi, coin);
-        //skrivUt(verdi, coin);
+        skrivTilLogg(verdi, coin);
         if (iterasjon % 3 == 0) { //lagrer gammel verdi vært 30 sek
             oldValue = verdi;
         }

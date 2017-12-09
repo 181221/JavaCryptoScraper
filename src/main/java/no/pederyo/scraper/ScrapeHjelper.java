@@ -1,6 +1,7 @@
 package no.pederyo.scraper;
 
 import no.api.jsoup.JsoupScrape;
+import no.pederyo.logg.Logg;
 import no.pederyo.modell.Coin;
 import no.pederyo.util.CoinUtil;
 
@@ -35,15 +36,18 @@ public class ScrapeHjelper {
      * @param verdi
      * @param coin
      */
-    public static void skrivUt(double verdi, Coin coin) {
-        System.out.println("Verdien til IoTa: " + verdi + " USD");
-        System.out.println("Din investering: " + formaterTall(coin.getInvestment()) + " kr");
-        System.out.println("Din totale beholdning: " + formaterTall(coin.getTotal()) + " kr ");
-        System.out.println("Avkasning: " + formaterTall(coin.getAvkasning()) + "%");
+    public static void skrivTilLogg(double verdi, Coin coin) {
         int antall = coin.getVerdier().size();
+        String melding = " ";
         if (antall >= 2) {
-            System.out.println("Forje verdi: " + coin.seForjePris() + " kl " + coin.getVerdier().get(antall - 1).getTid());
+            melding = "\nForje verdi: " + coin.seForjePris() + " kl " + coin.getVerdier().get(antall - 1).getTid();
+            System.out.println();
         }
+        Logg.logger.info("Verdien til IoTa: " + verdi + " USD" +
+                "\n" + "Verdien til IoTa: " + verdi + " USD" +
+                "\n" + "Din investering: " + formaterTall(coin.getInvestment()) + " kr" +
+                "\n" + "Din totale beholdning: " + formaterTall(coin.getTotal()) + " kr " +
+                "\n" + "Avkasning: " + formaterTall(coin.getAvkasning()) + "%" + melding);
     }
 
     public static String lagMelding(Coin coin) {
@@ -52,6 +56,7 @@ public class ScrapeHjelper {
                 "\nTotal beholdning: " + formaterTall(coin.getTotal()) + "kr" +
                 "\nAvkasning: " + formaterTall(coin.getAvkasning()) + "%" +
                 "\nAntall Iota's: " + coin.getAntall();
+        Logg.logger.info(melding);
         return melding;
     }
 

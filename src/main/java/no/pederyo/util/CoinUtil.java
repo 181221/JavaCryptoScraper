@@ -6,6 +6,7 @@ import no.pederyo.scraper.PushBullet;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 import static no.pederyo.scraper.VerdiSjekker.gjorOmDoubleTilBC;
@@ -58,6 +59,11 @@ public class CoinUtil {
         return Double.parseDouble(verdien);
     }
 
+    public static double gjorOmDoubleTilBIGDECIMAL(double verdi) {
+        BigDecimal b = new BigDecimal(verdi);
+        return formaterDouble(b.doubleValue(), "##.0000");
+    }
+
     /**
      * Konvererterer prisen til iota fra html doc til en double.
      * @param elem
@@ -83,7 +89,9 @@ public class CoinUtil {
      * @return
      */
     public static double rengUtProsent(double total, double invest) {
-        return ((total - invest) / invest) * 100;
+        double nyTotal = gjorOmDoubleTilBIGDECIMAL(total);
+        double nyInvest = gjorOmDoubleTilBIGDECIMAL(invest);
+        return ((nyTotal - nyInvest) / nyInvest) * 100;
     }
 
     /**
