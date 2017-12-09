@@ -1,5 +1,6 @@
 package no.pederyo.util;
 
+import no.pederyo.modell.Avkastning;
 import no.pederyo.modell.Coin;
 import no.pederyo.modell.Verdi;
 import no.pederyo.scraper.PushBullet;
@@ -96,11 +97,11 @@ public class CoinUtil {
 
     /**
      * Legger til iota prisen i pristabellen og setter opp attributtene til coinen.
-     * Setter total og avkasning.
+     * Setter total og current-avkasning.
      * @param verdi
      * @param coin
      */
-    public static boolean regnUtVerdier(double verdi, Coin coin) {
+    public static boolean regnUtSetTotalOgAvkastning(double verdi, Coin coin) {
         boolean nyVerdi = false;
         if (verdi != -1) {
             coin.setTotal(CoinUtil.totalVerdiINOK(verdi, coin));
@@ -113,23 +114,19 @@ public class CoinUtil {
         return nyVerdi;
     }
 
+
     /**
-     * Kjøres vært 15 min sjekker om avkastningen er høyere enn 2%
+     * Regner ut differansen mellom current verdi og forje.
      * sjekker verditabellen om det er prisendring
-     *
      * @param c
      * @param verdi realtime iota verdi i dollar
-     * @return returnerer true om det har vært en endring på +-0.3 eller om avkasning høyere om 2%
+     * @return returnerer true om det har vært en endring på +-0.3.
      */
     public static boolean sjekkValletPushNot(Coin c, double verdi) {
         int antall = c.getVerdier().size();
         double plussforje = gjorOmDoubleTilBC(c.seForjePris(), "pluss", 0.3);
         double minusforje = gjorOmDoubleTilBC(c.seForjePris(), "minus", 0.3);
         boolean nyVerdi = false;
-        if (c.getAvkasning() >= 2) {
-            PushBullet.client.sendNotePush("Avkastning", formaterTall(c.getAvkasning()) +"%");
-            nyVerdi = true;
-        }
         if (verdi >= plussforje && antall >= 2) {
             PushBullet.client.sendNotePush("Stigning på Iota", formaterTall(verdi) + " økning på over 0.3");
             nyVerdi = true;
@@ -138,6 +135,27 @@ public class CoinUtil {
             nyVerdi = true;
         }
         return nyVerdi;
+    }
+
+    /**
+     * Regner ut avkasntning.
+     *
+     * @param c
+     * @param avk
+     * @return
+     */
+    public static boolean sjekkAvkastning(Coin c, Avkastning avk) {
+        boolean nyAvkasning = false;
+        if (avk.getAntall() >= 2) {
+            double forje = avk.getStart().getNeste().getElement();
+            double current = avk.getStart().getElement();
+            forje = gjorOmDoubleTilBC(forje, "pluss", 5);
+            if (current >= forje) {
+                PushBullet.client.sendNotePush("Avkastning", formaterTall(c.getAvkasning()) + "%");
+                nyAvkasning = true;
+            }
+        }
+        return nyAvkasning;
     }
 
     public static boolean leggTilVerdi(double verdi, Coin coin) {

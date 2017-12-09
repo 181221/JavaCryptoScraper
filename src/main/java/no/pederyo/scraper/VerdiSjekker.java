@@ -49,12 +49,14 @@ public class VerdiSjekker {
 
     public static double gjorOmDoubleTilBC(double forje, String operator, double differanse) {
         BigDecimal b = new BigDecimal(forje);
-        BigDecimal b1 = new BigDecimal(0.2);
+        BigDecimal b1 = new BigDecimal(differanse);
         BigDecimal b2;
         if (operator.equals("pluss")) {
             b2 = b.add(b1);
         } else if (operator.equals("minus")) {
             b2 = b.subtract(b1);
+        } else if (operator.equals("gange")) {
+            b2 = b.multiply(b1);
         } else {
             return -1;
         }

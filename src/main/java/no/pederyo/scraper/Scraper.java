@@ -1,6 +1,7 @@
 package no.pederyo.scraper;
 
 import no.pederyo.logg.Logg;
+import no.pederyo.modell.Avkastning;
 import no.pederyo.modell.Coin;
 import no.pederyo.timertask.PlanleggerHjelp;
 
@@ -16,13 +17,38 @@ public class Scraper {
     public static void kjorProgram(Coin c) {
         oldValue = scrape();
         leggTilVerdi(oldValue, c);
+        Avkastning avkastning = new Avkastning();
+        regnUtSetTotalOgAvkastning(oldValue, c);
+        avkastning.leggTilAvkastning(c); // Oppretter node.
         while (true) {
             try {
-                enScrapeIterasjon(c);
+                enScrapeIterasjon(c, avkastning);
                 Thread.sleep(10000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+
+    private static void enScrapeIterasjon(Coin coin, Avkastning avk) {
+        iterasjon++;
+        double verdi = scrape();
+        regnUtSetTotalOgAvkastning(verdi, coin);
+        skrivTilLogg(verdi, coin);
+        if (iterasjon % 3 == 0) { //lagrer gammel verdi vært 30 sek
+            oldValue = verdi;
+        }
+        if (iterasjon % 180 == 0) { //sjekker mot gammel verdi. Hver halv time.
+            sjekkValletPushNot(coin, verdi); //sjekker gammel mot current verdi.
+            avk.leggTilAvkastning(coin); // legger til nyAvkastning
+            sjekkAvkastning(coin, avk); // sjekker avkastning.
+            leggTilVerdi(verdi, coin);
+        }
+        sjekkforjeVerdi(oldValue, verdi);
+        sjekkMilePeler(verdi);
+        if (iterasjon % 4320 == 0) { // hver 12 time send summary.
+            PushBullet.client.sendNotePush("Summary!", ScrapeHjelper.lagMelding(coin));
         }
     }
 
@@ -36,25 +62,6 @@ public class Scraper {
         new PushBullet(args[2]);
         new Logg();
         PlanleggerHjelp.settOppplanlegger(coin);// Har ikke testet metode.
-    }
-
-    private static void enScrapeIterasjon(Coin coin) {
-        iterasjon++;
-        double verdi = scrape();
-        regnUtVerdier(verdi, coin);
-        skrivTilLogg(verdi, coin);
-        if (iterasjon % 3 == 0) { //lagrer gammel verdi vært 30 sek
-            oldValue = verdi;
-        }
-        if (iterasjon % 180 == 0) { //sjekker mot gammel verdi. Hver halv time.
-            sjekkValletPushNot(coin, verdi);
-            leggTilVerdi(verdi, coin);
-        }
-        sjekkforjeVerdi(oldValue, verdi);
-        sjekkMilePeler(verdi);
-        if (iterasjon % 4320 == 0) { // hver 12 time send summary.
-            PushBullet.client.sendNotePush("Summary!", ScrapeHjelper.lagMelding(coin));
-        }
     }
 
 }
