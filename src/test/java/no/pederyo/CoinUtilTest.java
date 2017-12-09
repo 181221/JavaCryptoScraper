@@ -55,16 +55,4 @@ public class CoinUtilTest {
         assertFalse(c.seForjePris() == v1.getPris());
     }
 
-    @Test
-    public void sjekkAtValletPushNotNaarAvkasningErRiktig() {
-        c.setAvkasning(2);
-        assertTrue(sjekkValletPushNot(c, 0));
-        c.setAvkasning(0);
-        assertFalse(sjekkValletPushNot(c, 0.0));
-        c.setAvkasning(2.0);
-        assertTrue(sjekkValletPushNot(c, 0));
-        c.setAvkasning(10.0);
-        assertTrue(sjekkValletPushNot(c, 0));
-    }
-
 }

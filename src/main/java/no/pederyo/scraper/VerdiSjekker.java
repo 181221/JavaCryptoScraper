@@ -23,7 +23,7 @@ public class VerdiSjekker {
         naaddfire = false;
         naaddfem = false;
         naaddseks = false;
-        // PushBullet pb = new PushBullet(System.getenv("pushApi"));
+        //PushBullet pb = new PushBullet(System.getenv("pushApi"));
     }
 
     public static boolean sjekkMilePeler(double current) {

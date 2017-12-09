@@ -139,8 +139,6 @@ public class CoinUtil {
 
     /**
      * Regner ut avkasntning.
-     *
-     * @param c
      * @param avk
      * @return
      */
@@ -151,11 +149,14 @@ public class CoinUtil {
             double current = avk.getStart().getElement();
             double plussforje = gjorOmDoubleTilBC(forje, "pluss", 5);
             double minusforje = gjorOmDoubleTilBC(forje, "minus", 5);
+            double diff;
             if (current >= plussforje) {
-                //PushBullet.client.sendNotePush("pluss-Avkastning", formaterTall(current + "%");
+                diff = gjorOmDoubleTilBC(current, "pluss", forje);
+                PushBullet.client.sendNotePush("pluss-Avkastning", "verdien er nå: " + formaterTall(current) + " fortjenelsen har steget " + diff + "% på 30 min.");
                 nyAvkasning = true;
             } else if (current <= minusforje) {
-                //PushBullet.client.sendNotePush("minus-Avkastning", formaterTall(current + "%");
+                diff = gjorOmDoubleTilBC(current, "minus", forje);
+                PushBullet.client.sendNotePush("minus-Avkastning", "verdien er nå: " + formaterTall(current) + " fortjenelsen har synket " + diff + "% på 30 min.");
                 nyAvkasning = true;
             }
         }
