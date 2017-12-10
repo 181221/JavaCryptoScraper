@@ -50,13 +50,13 @@ public class ScrapeHjelper {
                 "\n" + "Avkasning: " + formaterTall(coin.getAvkasning()) + "%" + melding);
     }
 
-    public static String lagMelding(Coin coin) {
-        String melding = "Dagens Høyeste: " + formaterTall(coin.dagensHoeste().getPris()) + "$ kl: " + coin.dagensHoeste().getTid() +
+    public static String lagMelding(Coin coin, double verdi) {
+        String melding = "24 Timer Høyest: " + JsoupScrape.hoyestIdag().substring(0, 6) + "$ kl: " +
                 "\nDin investering: " + formaterTall(coin.getInvestment()) + "kr" +
                 "\nTotal beholdning: " + formaterTall(coin.getTotal()) + "kr" +
                 "\nAvkasning: " + formaterTall(coin.getAvkasning()) + "%" +
                 "\nAntall Iota's: " + coin.getAntall() +
-                "\nIoTa verdi: " + formaterTall(coin.seForjePris());
+                "\nIoTa verdi ATM: " + formaterTall(verdi);
 
         Logg.logger.info(melding);
         return melding;

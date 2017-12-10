@@ -4,15 +4,15 @@ import static no.pederyo.util.CoinUtil.rengUtProsent;
 
 public class Avkastning {
     private int antall;
-    private Node<Double> start;
+    private Node<Coin> start;
 
     public Avkastning() {
         antall = 0;
         start = null;
     }
 
-    public void leggTil(Double ny) {
-        Node<Double> nyNode = new Node<>(ny);
+    public void leggTil(Coin ny) {
+        Node<Coin> nyNode = new Node<>(ny);
         nyNode.setNeste(start);
         start = nyNode;
         antall++;
@@ -20,7 +20,8 @@ public class Avkastning {
 
     public void leggTilAvkastning(Coin coin) {
         double avkasning = rengUtProsent(coin.getTotal(), coin.getInvestment());
-        leggTil(avkasning);
+        coin.setAvkasning(avkasning);
+        leggTil(coin);
     }
 
     public int getAntall() {
@@ -31,11 +32,11 @@ public class Avkastning {
         this.antall = antall;
     }
 
-    public Node<Double> getStart() {
+    public Node<Coin> getStart() {
         return start;
     }
 
-    public void setStart(Node<Double> start) {
+    public void setStart(Node<Coin> start) {
         this.start = start;
     }
 }

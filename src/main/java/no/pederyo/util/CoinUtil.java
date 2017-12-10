@@ -122,16 +122,16 @@ public class CoinUtil {
      * @param verdi realtime iota verdi i dollar
      * @return returnerer true om det har vært en endring på +-0.3.
      */
-    public static boolean sjekkValletPushNot(Coin c, double verdi) {
+    public static boolean sjekkVerdiOgPushNotifikasjon(Coin c, double verdi) {
         int antall = c.getVerdier().size();
-        double plussforje = gjorOmDoubleTilBC(c.seForjePris(), "pluss", 0.3);
-        double minusforje = gjorOmDoubleTilBC(c.seForjePris(), "minus", 0.3);
+        double plussforje = gjorOmDoubleTilBC(c.seForjePris(), "gange", 1.08);
+        double minusforje = gjorOmDoubleTilBC(c.seForjePris(), "gange", 0.92);
         boolean nyVerdi = false;
         if (verdi >= plussforje && antall >= 2) {
-            PushBullet.client.sendNotePush("Stigning! IoTaVerdi er nå " + formaterTall(verdi) + " USD", "Økning på over 0.3 siden " + c.getVerdier().get(antall - 2).getTid());
+            PushBullet.client.sendNotePush("Stigning! IoTaVerdi er nå " + formaterTall(verdi) + " USD", "Økning på over 8% siden " + c.getVerdier().get(antall - 2).getTid());
             nyVerdi = true;
         } else if (verdi <= minusforje && antall >= 2) {
-            PushBullet.client.sendNotePush("Nedgang! IoTaVerdi er nå " + formaterTall(verdi) + " USD", "Nedgang på over 0.3 siden " + c.getVerdier().get(antall - 2).getTid());
+            PushBullet.client.sendNotePush("Nedgang! IoTaVerdi er nå " + formaterTall(verdi) + " USD", "Nedgang på over 7% siden " + c.getVerdier().get(antall - 2).getTid());
             nyVerdi = true;
         }
         return nyVerdi;
@@ -147,16 +147,16 @@ public class CoinUtil {
         if (avk.getAntall() >= 2) {
             double forje = avk.getStart().getNeste().getElement();
             double current = avk.getStart().getElement();
-            double plussforje = gjorOmDoubleTilBC(forje, "pluss", 5);
-            double minusforje = gjorOmDoubleTilBC(forje, "minus", 5);
+            double plussforje = gjorOmDoubleTilBC(forje, "pluss", 7);
+            double minusforje = gjorOmDoubleTilBC(forje, "minus", 7);
             double diff;
             if (current >= plussforje) {
                 diff = gjorOmDoubleTilBC(forje, "minus", current);
-                PushBullet.client.sendNotePush("Avkastning varsel", " Avkastning er nå: " + formaterTall(current) + "%. Avkastning har steget med " + formaterTall(Math.abs(diff)) + "%, på 30 min.");
+                PushBullet.client.sendNotePush("Avkastning varsel", " Avkastning er nå: " + formaterTall(current) + "%. Avkastning har steget med " + formaterTall(Math.abs(diff)));
                 nyAvkasning = true;
             } else if (current <= minusforje) {
                 diff = gjorOmDoubleTilBC(forje, "minus", current);
-                PushBullet.client.sendNotePush("Avkastning varsel", "Avkastning er nå: " + formaterTall(current) + "%. Fortjenelsen har synket med " + formaterTall(diff) + "%, på 30 min.");
+                PushBullet.client.sendNotePush("Avkastning varsel", "Avkastning er nå: " + formaterTall(current) + "%. Fortjenelsen har synket med " + formaterTall(diff));
                 nyAvkasning = true;
             }
         }

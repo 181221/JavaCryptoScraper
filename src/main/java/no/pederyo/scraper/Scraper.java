@@ -32,29 +32,90 @@ public class Scraper {
             }
         }
     }
+
+    /**
+     * En iterasjon Skjer hvert tiende sekund. Iota Verdi blir hentet fra internett og parametere sjekkes.
+     *
+     * @param coin
+     * @param avk
+     */
     private static void enScrapeIterasjon(Coin coin, Avkastning avk) {
         iterasjon++;
-        double verdi = scrape();
-        regnUtSetTotalOgAvkastning(verdi, coin);
-        if (iterasjon % 3 == 0) { //lagrer gammel verdi vært 30 sek
+
+        double verdi = scrape(); // Henter Iota verdi fra internett.
+
+        regnUtSetTotalOgAvkastning(verdi, coin); // regner ut avkasning og total.
+
+        if (iterasjon % 3 == 0) { //lagrer gammel verdi vært 30 sek.
             oldValue = verdi;
         }
+
         if (iterasjon % 6 == 0) {
-            skrivTilLogg(verdi, coin); // skriver til log vært 60 sek
+            skrivTilLogg(verdi, coin); // skriver til log vært 60 sek.
         }
-        if (iterasjon % 180 == 0) { //sjekker mot gammel verdi. Hver halv time.
-            boolean leggTil = sjekkValletPushNot(coin, verdi); //sjekker gammel mot current verdi.
-            avk.leggTilAvkastning(coin);
-            sjekkAvkastning(avk);
+
+        halvTimeSjekkVerdiEndring(coin, verdi); // sjekker verdi endring på IoTa
+
+        halvTimeSjekkAvkastning(coin, verdi, avk); // sjekker avkastningsedring på beholding.
+
+        sjekkforjeVerdi(oldValue, verdi); // sjekker om det har skjedd en endring på 4% på 30 sekunder.
+
+        sjekkMilePeler(verdi); // Sjekker om noen av milepælene er nådd. 4.5, 5.5, 6.5.
+
+        tolvTimerSammendrag(coin, verdi);  // hver 12 time send summary.
+
+    }
+
+    /**
+     * @param coin
+     * @param verdi
+     */
+    public static void tolvTimerSammendrag(Coin coin, double verdi) {
+        if (iterasjon % 4320 == 0) {
+            PushBullet.client.sendNotePush("12 Timers varsel.", ScrapeHjelper.lagMelding(coin, verdi));
+        }
+    }
+
+    /**
+     * Sjekker hver halvtime om det har skjedd en endring på 8% på IoTa verdi.
+     *
+     * @param coin
+     * @param verdi
+     * @return
+     */
+    public static boolean halvTimeSjekkVerdiEndring(Coin coin, double verdi) {
+        boolean leggTil = false;
+        if (iterasjon % 180 == 0) {
+            leggTil = sjekkVerdiOgPushNotifikasjon(coin, verdi); //sjekker gammel mot current verdi.
             if (leggTil) {
-                leggTilVerdi(verdi, coin); //legger til ny verdi om det har vært en økning på 0.3 siden forjegang.
+                leggTilVerdi(verdi, coin); //legger til ny verdi om det har vært en økning på 8% siden forjegang.
             }
         }
-        sjekkforjeVerdi(oldValue, verdi);
-        sjekkMilePeler(verdi);
-        if (iterasjon % 4320 == 0) { // hver 12 time send summary.
-            PushBullet.client.sendNotePush("12 Timers varsel.", ScrapeHjelper.lagMelding(coin));
+        return leggTil;
+    }
+
+    /**
+     * Sjekker hver halvtime om det har skjedd en endring på 7 prosent i avkastningen siden forje sjekk.
+     * Om det har skjedd en endring legges den til i linken ellers skjer ingen ting.
+     * Første halvtimen i programmet legges verdien til og da er det 2 verdier i linken.
+     *
+     * @param coin
+     * @param verdi
+     * @param avk
+     * @return
+     */
+    public static boolean halvTimeSjekkAvkastning(Coin coin, double verdi, Avkastning avk) {
+        boolean avkastning = false;
+        if (iterasjon % 180 == 0) {
+            if (iterasjon == 180) { // første halvtimen i programmet legges verdi til nå er det 2 verdier i linken.
+                avk.leggTilAvkastning(coin);
+            }
+            avkastning = sjekkAvkastning(avk); // sjekker avkastningen.
+            if (avkastning) { // om det har vært en endring på 8% legges en ny avkastning inn i linken.
+                avk.leggTilAvkastning(coin);
+            }
         }
+        return avkastning;
     }
 
     /**

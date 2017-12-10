@@ -66,8 +66,8 @@ public class VerdiSjekker {
 
     public static boolean sjekkforjeVerdi(double forje, double current) {
         boolean nypris = false;
-        double plussforje = gjorOmDoubleTilBC(forje, "pluss", 0.2);
-        double minusforje = gjorOmDoubleTilBC(forje, "minus", 0.2);
+        double plussforje = gjorOmDoubleTilBC(forje, "gange", 1.04);
+        double minusforje = gjorOmDoubleTilBC(forje, "gange", 0.96);
         if (current >= plussforje && plussforje != -1) {
             PushBullet.client.sendNotePush("Ny +Verdi", formaterTall(current) + " USD");
             Logg.logger.info("Ny +Verdi " + formaterTall(current) + " USD");

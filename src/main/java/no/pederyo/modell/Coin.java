@@ -41,6 +41,11 @@ public class Coin {
         }
     }
 
+    /**
+     * Finner dagens høyeste, burde heller lete på nettet.
+     *
+     * @return
+     */
     public Verdi dagensHoeste() {
         double max = 0;
         Verdi verdi = null;
