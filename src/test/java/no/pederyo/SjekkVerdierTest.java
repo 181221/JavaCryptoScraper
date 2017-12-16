@@ -37,7 +37,7 @@ public class SjekkVerdierTest {
         assertTrue(VerdiSjekker.sjekkforjeVerdi(2.2, 2.4));
         assertTrue(VerdiSjekker.sjekkforjeVerdi(2.312, 2.512));
         assertTrue(VerdiSjekker.sjekkforjeVerdi(0.0, 2.512));
-        assertFalse(VerdiSjekker.sjekkforjeVerdi(2.0, 2.1));
+        assertTrue(VerdiSjekker.sjekkforjeVerdi(2.0, 2.1));
         assertFalse(VerdiSjekker.sjekkforjeVerdi(2.1, 2.1));
         assertFalse(VerdiSjekker.sjekkforjeVerdi(2, 2));
     }
@@ -47,9 +47,9 @@ public class SjekkVerdierTest {
         assertTrue(VerdiSjekker.sjekkforjeVerdi(4.2, 4));
         assertTrue(VerdiSjekker.sjekkforjeVerdi(4.300, 4.1));
         assertTrue(VerdiSjekker.sjekkforjeVerdi(5.221, 4));
-        assertTrue(VerdiSjekker.sjekkforjeVerdi(10.3412, 10.1412));
-        assertFalse(VerdiSjekker.sjekkforjeVerdi(2.0, 2.1));
-        assertFalse(VerdiSjekker.sjekkforjeVerdi(0, 0));
+        assertTrue(VerdiSjekker.sjekkforjeVerdi(10.3412, 9.1412));
+        assertTrue(VerdiSjekker.sjekkforjeVerdi(2.0, 2.1));
+        assertFalse(VerdiSjekker.sjekkforjeVerdi(0.2, 0.2));
     }
 
     @Test
