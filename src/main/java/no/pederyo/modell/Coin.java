@@ -13,9 +13,9 @@ import java.util.ArrayList;
 public class Coin {
     private int antall;
     private double investment;
-    private double avkasning;
     private double total;
     private double oekning;
+    private Avkastning avkastning;
     private ArrayList<Verdi> verdier;
 
     public Coin() {
@@ -40,26 +40,6 @@ public class Coin {
             return -1.0;
         }
     }
-
-    /**
-     * Finner dagens høyeste, burde heller lete på nettet.
-     *
-     * @return
-     */
-    public Verdi dagensHoeste() {
-        double max = 0;
-        Verdi verdi = null;
-        if (verdier.size() > 0) {
-            for (Verdi v : verdier) {
-                if (v.getPris() > max) {
-                    max = v.getPris();
-                    verdi = v;
-                }
-            }
-        }
-        return verdi;
-    }
-
 
     // ------------- GETTERS OG SETTERS ---------------------
 
@@ -95,12 +75,12 @@ public class Coin {
         this.investment = investment;
     }
 
-    public double getAvkasning() {
-        return avkasning;
+    public Avkastning getAvkasning() {
+        return avkastning;
     }
 
-    public void setAvkasning(double avkasning) {
-        this.avkasning = avkasning;
+    public void setAvkasning(Avkastning avkasning) {
+        this.avkastning = avkasning;
     }
 
     public double getTotal() {

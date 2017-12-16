@@ -1,7 +1,7 @@
 package no.pederyo.scraper;
 
 import no.pederyo.logg.Logg;
-import no.pederyo.modell.Avkastning;
+import no.pederyo.modell.AvkastningArkiv;
 import no.pederyo.modell.Coin;
 
 import static no.pederyo.scraper.ScrapeHjelper.scrape;
@@ -20,7 +20,7 @@ public class Scraper {
         PushBullet.client.sendNotePush("TRACKING STARTET", MELDING_START + oldValue + " USD");
         leggTilVerdi(oldValue, c);
         leggTilVerdi(oldValue, c);
-        Avkastning avkastning = new Avkastning();
+        AvkastningArkiv avkastning = new AvkastningArkiv();
         regnUtSetTotalOgAvkastning(oldValue, c);
         avkastning.leggTilAvkastning(c); // Oppretter node.
         while (true) {
@@ -39,7 +39,7 @@ public class Scraper {
      * @param coin
      * @param avk
      */
-    private static void enScrapeIterasjon(Coin coin, Avkastning avk) {
+    private static void enScrapeIterasjon(Coin coin, AvkastningArkiv avk) {
         iterasjon++;
 
         double verdi = scrape(); // Henter Iota verdi fra internett.
@@ -62,7 +62,7 @@ public class Scraper {
 
         sjekkMilePeler(verdi); // Sjekker om noen av milepælene er nådd. 4.5, 5.5, 6.5.
 
-        tolvTimerSammendrag(coin, verdi);  // hver 12 time send summary.
+        DagSammendrag(coin, verdi, avk);  // hver 24 time send summary.
 
     }
 
@@ -70,9 +70,10 @@ public class Scraper {
      * @param coin
      * @param verdi
      */
-    public static void tolvTimerSammendrag(Coin coin, double verdi) {
-        if (iterasjon % 4320 == 0) {
-            PushBullet.client.sendNotePush("12 Timers varsel.", ScrapeHjelper.lagMelding(coin, verdi));
+    public static void DagSammendrag(Coin coin, double verdi, AvkastningArkiv avk) {
+        if (iterasjon % 86400 == 0) {
+            avk.leggTilAvkastning(coin);
+            PushBullet.client.sendNotePush("24 Timers varsel.", ScrapeHjelper.lagMelding(coin, verdi));
         }
     }
 
@@ -104,7 +105,7 @@ public class Scraper {
      * @param avk
      * @return
      */
-    public static boolean halvTimeSjekkAvkastning(Coin coin, double verdi, Avkastning avk) {
+    public static boolean halvTimeSjekkAvkastning(Coin coin, double verdi, AvkastningArkiv avk) {
         boolean avkastning = false;
         if (iterasjon % 180 == 0) {
             if (iterasjon == 180) { // første halvtimen i programmet legges verdi til nå er det 2 verdier i linken.

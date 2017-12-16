@@ -1,5 +1,6 @@
 package no.pederyo.timertask;
 
+import no.api.jsoup.JsoupScrape;
 import no.pederyo.modell.Coin;
 import no.pederyo.scraper.PushBullet;
 
@@ -59,10 +60,10 @@ public class CustomTask extends TimerTask {
     }
 
     public String lagMelding() {
-        String melding = "Dagens Høyeste: " + formaterTall(coin.dagensHoeste().getPris()) + "$ kl: " + coin.dagensHoeste().getTid() +
+        String melding = "Dagens Høyeste: " + JsoupScrape.hoyestIdag() + "$" +
                 "\nDin investering: " + formaterTall(coin.getInvestment()) + "kr" +
                 "\nTotal beholdning: " + formaterTall(coin.getTotal()) + "kr" +
-                "\nAvkasning: " + formaterTall(coin.getAvkasning()) + "%" +
+                "\nAvkasning: " + formaterTall(coin.getAvkasning().getVerdi()) + "%" +
                 "\nAntall Iota's: " + coin.getAntall();
         return melding;
     }

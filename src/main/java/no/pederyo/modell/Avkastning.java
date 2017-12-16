@@ -1,42 +1,30 @@
 package no.pederyo.modell;
 
-import static no.pederyo.util.CoinUtil.rengUtProsent;
-
+/**
+ * Created by Peder on 16.12.2017.
+ */
 public class Avkastning {
-    private int antall;
-    private Node<Coin> start;
+    double verdi;
+    String tid;
 
-    public Avkastning() {
-        antall = 0;
-        start = null;
+    public Avkastning(double verdi, String tid) {
+        this.verdi = verdi;
+        this.tid = tid;
     }
 
-    public void leggTil(Coin ny) {
-        Node<Coin> nyNode = new Node<>(ny);
-        nyNode.setNeste(start);
-        start = nyNode;
-        antall++;
+    public double getVerdi() {
+        return verdi;
     }
 
-    public void leggTilAvkastning(Coin coin) {
-        double avkasning = rengUtProsent(coin.getTotal(), coin.getInvestment());
-        coin.setAvkasning(avkasning);
-        leggTil(coin);
+    public void setVerdi(double verdi) {
+        this.verdi = verdi;
     }
 
-    public int getAntall() {
-        return antall;
+    public String getTid() {
+        return tid;
     }
 
-    public void setAntall(int antall) {
-        this.antall = antall;
-    }
-
-    public Node<Coin> getStart() {
-        return start;
-    }
-
-    public void setStart(Node<Coin> start) {
-        this.start = start;
+    public void setTid(String tid) {
+        this.tid = tid;
     }
 }

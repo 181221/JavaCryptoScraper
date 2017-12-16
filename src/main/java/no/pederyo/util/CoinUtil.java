@@ -1,6 +1,7 @@
 package no.pederyo.util;
 
 import no.pederyo.modell.Avkastning;
+import no.pederyo.modell.AvkastningArkiv;
 import no.pederyo.modell.Coin;
 import no.pederyo.modell.Verdi;
 import no.pederyo.scraper.PushBullet;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 import static no.pederyo.scraper.VerdiSjekker.gjorOmDoubleTilBC;
+import static no.pederyo.util.DatoUtil.lagCurrentDate;
 
 public class CoinUtil {
     /**
@@ -105,8 +107,8 @@ public class CoinUtil {
         boolean nyVerdi = false;
         if (verdi != -1) {
             coin.setTotal(CoinUtil.totalVerdiINOK(verdi, coin));
-            double avkasning = rengUtProsent(coin.getTotal(), coin.getInvestment());
-            coin.setAvkasning(avkasning);
+            Avkastning a = AvkastningArkiv.opprettAvkastning(coin);
+            coin.setAvkasning(a);
             nyVerdi = true;
         } else {
             System.out.println("noe gikk galt");
@@ -120,18 +122,20 @@ public class CoinUtil {
      * sjekker verditabellen om det er prisendring
      * @param c
      * @param verdi realtime iota verdi i dollar
-     * @return returnerer true om det har vært en endring på +-0.3.
+     * @return returnerer true om det har vært en endring på +-0.8.
      */
     public static boolean sjekkVerdiOgPushNotifikasjon(Coin c, double verdi) {
         int antall = c.getVerdier().size();
         double plussforje = gjorOmDoubleTilBC(c.seForjePris(), "gange", 1.08);
         double minusforje = gjorOmDoubleTilBC(c.seForjePris(), "gange", 0.92);
+        String prosent = formaterTall(plussforje - verdi);
+        System.out.println(prosent);
         boolean nyVerdi = false;
         if (verdi >= plussforje && antall >= 2) {
             PushBullet.client.sendNotePush("Stigning! IoTaVerdi er nå " + formaterTall(verdi) + " USD", "Økning på over 8% siden " + c.getVerdier().get(antall - 2).getTid());
             nyVerdi = true;
         } else if (verdi <= minusforje && antall >= 2) {
-            PushBullet.client.sendNotePush("Nedgang! IoTaVerdi er nå " + formaterTall(verdi) + " USD", "Nedgang på over 7% siden " + c.getVerdier().get(antall - 2).getTid());
+            PushBullet.client.sendNotePush("Nedgang! IoTaVerdi er nå " + formaterTall(verdi) + " USD", "Nedgang på over 8% siden " + c.getVerdier().get(antall - 2).getTid());
             nyVerdi = true;
         }
         return nyVerdi;
@@ -142,21 +146,21 @@ public class CoinUtil {
      * @param avk
      * @return
      */
-    public static boolean sjekkAvkastning(Avkastning avk) {
+    public static boolean sjekkAvkastning(AvkastningArkiv avk) {
         boolean nyAvkasning = false;
         if (avk.getAntall() >= 2) {
-            double forje = avk.getStart().getNeste().getElement();
-            double current = avk.getStart().getElement();
+            double forje = avk.getStart().getNeste().getElement().getAvkasning().getVerdi();
+            double current = avk.getStart().getElement().getAvkasning().getVerdi();
             double plussforje = gjorOmDoubleTilBC(forje, "pluss", 7);
             double minusforje = gjorOmDoubleTilBC(forje, "minus", 7);
             double diff;
             if (current >= plussforje) {
                 diff = gjorOmDoubleTilBC(forje, "minus", current);
-                PushBullet.client.sendNotePush("Avkastning varsel", " Avkastning er nå: " + formaterTall(current) + "%. Avkastning har steget med " + formaterTall(Math.abs(diff)));
+                //PushBullet.client.sendNotePush("Avkastning Steget", " Avkastning er nå: " + formaterTall(current) + "%. Avkastning har steget med " + formaterTall(Math.abs(diff))+"%");
                 nyAvkasning = true;
             } else if (current <= minusforje) {
                 diff = gjorOmDoubleTilBC(forje, "minus", current);
-                PushBullet.client.sendNotePush("Avkastning varsel", "Avkastning er nå: " + formaterTall(current) + "%. Fortjenelsen har synket med " + formaterTall(diff));
+                //PushBullet.client.sendNotePush("Avkastning reduksjon", "Avkastning er nå: " + formaterTall(current) + "%. Fortjenelsen har synket med " + formaterTall(diff)+"%");
                 nyAvkasning = true;
             }
         }
@@ -173,6 +177,6 @@ public class CoinUtil {
     }
 
     private static Verdi lagVerdi(double pris) {
-        return new Verdi(pris, DatoUtil.lagCurrentDate());
+        return new Verdi(pris, lagCurrentDate());
     }
 }
