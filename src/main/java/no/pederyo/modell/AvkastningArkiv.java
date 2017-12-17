@@ -2,7 +2,6 @@ package no.pederyo.modell;
 
 import static no.pederyo.util.CoinUtil.rengUtProsent;
 import static no.pederyo.util.DatoUtil.lagCurrentDate;
-//TODO
 
 public class AvkastningArkiv {
     private int antall;
@@ -16,8 +15,7 @@ public class AvkastningArkiv {
     public static Avkastning opprettAvkastning(Coin coin) {
         String tid = lagCurrentDate();
         double AvkastningVerdi = rengUtProsent(coin.getTotal(), coin.getInvestment());
-        Avkastning a = new Avkastning(AvkastningVerdi, tid);
-        return a;
+        return new Avkastning(AvkastningVerdi, tid);
     }
 
     public void leggTil(Coin ny) {

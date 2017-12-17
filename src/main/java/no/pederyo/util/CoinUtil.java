@@ -4,14 +4,12 @@ import no.pederyo.modell.Avkastning;
 import no.pederyo.modell.AvkastningArkiv;
 import no.pederyo.modell.Coin;
 import no.pederyo.modell.Verdi;
-import no.pederyo.scraper.PushBullet;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
-import static no.pederyo.scraper.VerdiSjekker.gjorOmDoubleTilBC;
 import static no.pederyo.util.DatoUtil.lagCurrentDate;
 
 public class CoinUtil {
@@ -33,6 +31,26 @@ public class CoinUtil {
         return total;
     }
 
+    public static double gjorOmDoubleTilBC(double forje, String operator, double differanse) {
+        BigDecimal b = new BigDecimal(forje);
+        BigDecimal b1 = new BigDecimal(differanse);
+        BigDecimal b2;
+        switch (operator) {
+            case "pluss":
+                b2 = b.add(b1);
+                break;
+            case "minus":
+                b2 = b.subtract(b1);
+                break;
+            case "gange":
+                b2 = b.multiply(b1);
+                break;
+            default:
+                return -1;
+        }
+        return formaterDouble(b2.doubleValue(), "##.0000");
+    }
+
     /**
      * Formaterer en double til en streng med 2 desimaler.
      *
@@ -46,7 +64,6 @@ public class CoinUtil {
 
     /**
      * Formaterer en double til en double med 2 desimaler.
-     *
      * @param verdi
      * @return double verdien
      */
@@ -114,57 +131,6 @@ public class CoinUtil {
             System.out.println("noe gikk galt");
         }
         return nyVerdi;
-    }
-
-
-    /**
-     * Regner ut differansen mellom current verdi og forje.
-     * sjekker verditabellen om det er prisendring
-     * @param c
-     * @param verdi realtime iota verdi i dollar
-     * @return returnerer true om det har vært en endring på +-0.8.
-     */
-    public static boolean sjekkVerdiOgPushNotifikasjon(Coin c, double verdi) {
-        int antall = c.getVerdier().size();
-        double plussforje = gjorOmDoubleTilBC(c.seForjePris(), "gange", 1.08);
-        double minusforje = gjorOmDoubleTilBC(c.seForjePris(), "gange", 0.92);
-        String prosent = formaterTall(plussforje - verdi);
-        System.out.println(prosent);
-        boolean nyVerdi = false;
-        if (verdi >= plussforje && antall >= 2) {
-            PushBullet.client.sendNotePush("Stigning! IoTaVerdi er nå " + formaterTall(verdi) + " USD", "Økning på over 8% siden " + c.getVerdier().get(antall - 2).getTid());
-            nyVerdi = true;
-        } else if (verdi <= minusforje && antall >= 2) {
-            PushBullet.client.sendNotePush("Nedgang! IoTaVerdi er nå " + formaterTall(verdi) + " USD", "Nedgang på over 8% siden " + c.getVerdier().get(antall - 2).getTid());
-            nyVerdi = true;
-        }
-        return nyVerdi;
-    }
-
-    /**
-     * Regner ut avkasntning.
-     * @param avk
-     * @return
-     */
-    public static boolean sjekkAvkastning(AvkastningArkiv avk) {
-        boolean nyAvkasning = false;
-        if (avk.getAntall() >= 2) {
-            double forje = avk.getStart().getNeste().getElement().getAvkasning().getVerdi();
-            double current = avk.getStart().getElement().getAvkasning().getVerdi();
-            double plussforje = gjorOmDoubleTilBC(forje, "pluss", 7);
-            double minusforje = gjorOmDoubleTilBC(forje, "minus", 7);
-            double diff;
-            if (current >= plussforje) {
-                diff = gjorOmDoubleTilBC(forje, "minus", current);
-                //PushBullet.client.sendNotePush("Avkastning Steget", " Avkastning er nå: " + formaterTall(current) + "%. Avkastning har steget med " + formaterTall(Math.abs(diff))+"%");
-                nyAvkasning = true;
-            } else if (current <= minusforje) {
-                diff = gjorOmDoubleTilBC(forje, "minus", current);
-                //PushBullet.client.sendNotePush("Avkastning reduksjon", "Avkastning er nå: " + formaterTall(current) + "%. Fortjenelsen har synket med " + formaterTall(diff)+"%");
-                nyAvkasning = true;
-            }
-        }
-        return nyAvkasning;
     }
 
     public static boolean leggTilVerdi(double verdi, Coin coin) {

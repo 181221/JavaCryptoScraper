@@ -3,7 +3,7 @@ package no.pederyo;
 import no.pederyo.modell.Avkastning;
 import no.pederyo.modell.AvkastningArkiv;
 import no.pederyo.modell.Coin;
-import no.pederyo.util.CoinUtil;
+import no.pederyo.scraper.VerdiSjekker;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,38 +61,38 @@ public class AvkastningTest {
     public void sjekkAtForjeMinusAvkastningStemmer() {
         avk.leggTil(c);
         avk.leggTil(c1);
-        assertTrue(CoinUtil.sjekkAvkastning(avk));
+        assertTrue(VerdiSjekker.sjekkAvkastning(avk));
         avk.leggTil(c2);
         avk.leggTil(c3);
-        assertFalse(CoinUtil.sjekkAvkastning(avk));
+        assertFalse(VerdiSjekker.sjekkAvkastning(avk));
         avk.leggTil(c4);
-        assertTrue(CoinUtil.sjekkAvkastning(avk));
+        assertTrue(VerdiSjekker.sjekkAvkastning(avk));
         avk.leggTil(c5);
         avk.leggTil(c6);
-        assertTrue(CoinUtil.sjekkAvkastning(avk));
+        assertTrue(VerdiSjekker.sjekkAvkastning(avk));
         avk.leggTil(c7);
         avk.leggTil(c8);
-        assertTrue(CoinUtil.sjekkAvkastning(avk));
+        assertTrue(VerdiSjekker.sjekkAvkastning(avk));
     }
 
     @Test
     public void sjekkAtForjeAvkastningStemmer() {
         avk.leggTil(c);
-        assertFalse(CoinUtil.sjekkAvkastning(avk));
+        assertFalse(VerdiSjekker.sjekkAvkastning(avk));
         avk.leggTil(c1);
-        assertTrue(CoinUtil.sjekkAvkastning(avk));
+        assertTrue(VerdiSjekker.sjekkAvkastning(avk));
         avk.leggTil(c2);
         avk.leggTil(c3);
-        assertFalse(CoinUtil.sjekkAvkastning(avk));
+        assertFalse(VerdiSjekker.sjekkAvkastning(avk));
         avk.leggTil(c4);
-        assertTrue(CoinUtil.sjekkAvkastning(avk));
+        assertTrue(VerdiSjekker.sjekkAvkastning(avk));
         avk.leggTil(c5);
-        assertTrue(CoinUtil.sjekkAvkastning(avk));
+        assertTrue(VerdiSjekker.sjekkAvkastning(avk));
         avk.leggTil(c6);
-        assertTrue(CoinUtil.sjekkAvkastning(avk));
+        assertTrue(VerdiSjekker.sjekkAvkastning(avk));
         avk.leggTil(c8);
         avk.leggTil(c7);
-        assertTrue(CoinUtil.sjekkAvkastning(avk));
+        assertTrue(VerdiSjekker.sjekkAvkastning(avk));
     }
 
 

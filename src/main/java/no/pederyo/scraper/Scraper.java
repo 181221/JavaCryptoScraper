@@ -8,8 +8,13 @@ import static no.pederyo.scraper.ScrapeHjelper.scrape;
 import static no.pederyo.scraper.ScrapeHjelper.skrivTilLogg;
 import static no.pederyo.scraper.VerdiSjekker.sjekkMilePeler;
 import static no.pederyo.scraper.VerdiSjekker.sjekkforjeVerdi;
-import static no.pederyo.util.CoinUtil.*;
+import static no.pederyo.util.CoinUtil.leggTilVerdi;
+import static no.pederyo.util.CoinUtil.regnUtSetTotalOgAvkastning;
 
+/**
+ * Skraperen som er kjernen i hele programmet. Henter infomasjon og deligerer ansvar til de andre
+ * klassene.
+ */
 public class Scraper {
     private static final String MELDING_START = "IoTa-Tracking har nå startet. Current Verdi: ";
     private static double oldValue = 0.0;
@@ -58,6 +63,8 @@ public class Scraper {
 
         halvTimeSjekkAvkastning(coin, verdi, avk); // sjekker avkastningsedring på beholding.
 
+        halvTimeSjekkStatiskOekning(coin, verdi); // Statisk sjekk på endring 30 min.
+
         sjekkforjeVerdi(oldValue, verdi); // sjekker om det har skjedd en endring på 4% på 30 sekunder.
 
         sjekkMilePeler(verdi); // Sjekker om noen av milepælene er nådd. 4.5, 5.5, 6.5.
@@ -87,7 +94,7 @@ public class Scraper {
     public static boolean halvTimeSjekkVerdiEndring(Coin coin, double verdi) {
         boolean leggTil = false;
         if (iterasjon % 180 == 0) {
-            leggTil = sjekkVerdiOgPushNotifikasjon(coin, verdi); //sjekker gammel mot current verdi.
+            leggTil = VerdiSjekker.sjekkVerdiOgPushNotifikasjon(coin, verdi); //sjekker gammel mot current verdi.
             if (leggTil) {
                 leggTilVerdi(verdi, coin); //legger til ny verdi om det har vært en økning på 8% siden forjegang.
             }
@@ -111,10 +118,23 @@ public class Scraper {
             if (iterasjon == 180) { // første halvtimen i programmet legges verdi til nå er det 2 verdier i linken.
                 avk.leggTilAvkastning(coin);
             }
-            avkastning = sjekkAvkastning(avk); // sjekker avkastningen.
+            avkastning = VerdiSjekker.sjekkAvkastning(avk); // sjekker avkastningen.
             if (avkastning) { // om det har vært en endring på 8% legges en ny avkastning inn i linken.
                 avk.leggTilAvkastning(coin);
             }
+        }
+        return avkastning;
+    }
+
+    /**
+     * Sjekker hver halvtime for en endring på akkurat den halvtimen.
+     *
+     * @return
+     */
+    public static boolean halvTimeSjekkStatiskOekning(Coin coin, double verdi) {
+        boolean avkastning = false;
+        if (iterasjon == 180) {
+            avkastning = VerdiSjekker.oekning(coin, verdi);
         }
         return avkastning;
     }
